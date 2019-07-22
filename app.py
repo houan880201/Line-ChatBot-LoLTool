@@ -24,7 +24,6 @@ tips_cols = ['Counter Tip One','Counter Tip Two','Counter Tip Three','Counter Ti
 
 def valid_champ(name):
 	champs = get_all_champions()
-	name
 	if name in champs or name.capitalize() in champs:
 		return True
 	else:
