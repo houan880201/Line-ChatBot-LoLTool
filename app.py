@@ -140,8 +140,13 @@ def callback():
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+	if event.message.text == 'Hi':
+		message = TextSendMessage("Hi back")
+		line_bot_api.reply_message(event.reply_token, message)
+
 	qryChamp = event.message.text
-	line_bot_api.reply_message(event.reply_token, format_counter_msg(event.message.text))
+	msg = TextSendMessage(format_counter_msg(event.message.text))
+	line_bot_api.reply_message(event.reply_token, msg)
 	#msg = TextSendMessage(str(res))
 	#line_bot_api.reply_message(event.reply_token, msg)
 
