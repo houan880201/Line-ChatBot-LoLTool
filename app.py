@@ -1,10 +1,10 @@
 from flask import Flask, request, abort
 
 from linebot import (
-    LineBotApi, WebhookHandler
+	LineBotApi, WebhookHandler
 )
 from linebot.exceptions import (
-    InvalidSignatureError
+	InvalidSignatureError
 )
 from linebot.models import *
 
@@ -21,140 +21,140 @@ partner_cols = ['1st Good Partner', '2nd Good Partner', '3rd Good Partner', '4th
 tips_cols = ['Counter Tip One','Counter Tip Two','Counter Tip Three','Counter Tip Four']
 
 def valid_champ(name):
-    champs = get_all_champions()
-    name
-    if name in champs or name.capitalize() in champs:
-        return True
-    else:
-        return False
+	champs = get_all_champions()
+	name
+	if name in champs or name.capitalize() in champs:
+		return True
+	else:
+		return False
 
 def get_all_champions():
-    # JSON is hosted at myjson.com as well just in case
-    # url = 'https://api.myjson.com/bins/tkg0v'
-    with open('champs.json') as json_data:
-        data = json.load(json_data)
-        allChampions = []
-        for champ in allChampions:
-            allChampions.append(champ['Champion Names'])
-        return allChampions
+	# JSON is hosted at myjson.com as well just in case
+	# url = 'https://api.myjson.com/bins/tkg0v'
+	with open('champs.json') as json_data:
+		data = json.load(json_data)
+		allChampions = []
+		for champ in allChampions:
+			allChampions.append(champ['Champion Names'])
+		return allChampions
 
 def parse_name(url):
-    return url.split('/')[-1]
+	return url.split('/')[-1]
 
 def get_loc_names(counter_cols):
-    loc_names = []
-    for col in counter_cols:
-        loc_names.append(col + " Location")
-    return loc_names
+	loc_names = []
+	for col in counter_cols:
+		loc_names.append(col + " Location")
+	return loc_names
 
 def get_counter(name):
-    with open('champs.json') as json_data:
-        data = json.load(json_data)
-        counters = []
-        locs = []
-        for champs in data:
-            if champs['Champion Names'] == name:
-                for col in counter_cols:
-                    counters.append(parse_name(champs[col]))
-                for col in get_loc_names(counter_cols):
-                    locs.append(champs[col])
-        return counters, locs
+	with open('champs.json') as json_data:
+		data = json.load(json_data)
+		counters = []
+		locs = []
+		for champs in data:
+			if champs['Champion Names'] == name:
+				for col in counter_cols:
+					counters.append(parse_name(champs[col]))
+				for col in get_loc_names(counter_cols):
+					locs.append(champs[col])
+		return counters, locs
 
 def get_strong_against(name):
-    with open('champs.json') as json_data:
-        data = json.load(json_data)
-        against = []
-        locs = []
-        for champs in data:
-            if champs['Champion Names'] == name:
-                for col in against_cols:
-                    against.append(parse_name(champs[col]))
-                for col in get_loc_names(against_cols):
-                    locs.append(champs[col])
-        return against, locs
+	with open('champs.json') as json_data:
+		data = json.load(json_data)
+		against = []
+		locs = []
+		for champs in data:
+			if champs['Champion Names'] == name:
+				for col in against_cols:
+					against.append(parse_name(champs[col]))
+				for col in get_loc_names(against_cols):
+					locs.append(champs[col])
+		return against, locs
 
 def get_partner(name):
-    with open('champs.json') as json_data:
-        data = json.load(json_data)
-        parters = []
-        for champs in data:
-            if champs['Champion Names'] == name:
-                for col in partner_cols:
-                    parters.append(parse_name(champs[col]))
-        return parters  
+	with open('champs.json') as json_data:
+		data = json.load(json_data)
+		parters = []
+		for champs in data:
+			if champs['Champion Names'] == name:
+				for col in partner_cols:
+					parters.append(parse_name(champs[col]))
+		return parters  
 
 def get_tips(name):
-    with open('champs.json') as json_data:
-        data = json.load(json_data)
-        tips = []
-        for champs in data:
-            if champs['Champion Names'] == name:
-                for col in tips_cols:
-                    tips.append(parse_name(champs[col]))    
-        return tips
+	with open('champs.json') as json_data:
+		data = json.load(json_data)
+		tips = []
+		for champs in data:
+			if champs['Champion Names'] == name:
+				for col in tips_cols:
+					tips.append(parse_name(champs[col]))    
+		return tips
 
 def format_counter_msg(name):
-    counters, locs = get_counter(name)
-    msg = ""
-    for i in range(len(counters)):
-        msg += "{} counters {} at {}. \n".format(counters[i], name, locs[i])
-    return msg
+	counters, locs = get_counter(name)
+	msg = ""
+	for i in range(len(counters)):
+		msg += "{} counters {} at {}. \n".format(counters[i], name, locs[i])
+	return msg
 
 def format_against_msg(name, against, locs):
-    msg = ""
-    for i in range(len(against)):
-        msg += "{} is strong against {} at {}. \n".format(name, against[i], locs[i])
-    return msg
+	msg = ""
+	for i in range(len(against)):
+		msg += "{} is strong against {} at {}. \n".format(name, against[i], locs[i])
+	return msg
 
 def format_partner_msg(name, partners):
-    msg = ""
-    for i in range(len(partners)):
-        msg += "{} goes well with {}. \n".format(partners[i], name)
-    return msg
+	msg = ""
+	for i in range(len(partners)):
+		msg += "{} goes well with {}. \n".format(partners[i], name)
+	return msg
 
 def format_tip_msg(name, tips):
-    msg = "To beat {}... \n".format(name)
-    for i in range(len(tips)):
-        msg += "{} \n".format(tips[i])
-    return msg
+	msg = "To beat {}... \n".format(name)
+	for i in range(len(tips)):
+		msg += "{} \n".format(tips[i])
+	return msg
 
 
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
 def callback():
-    # get X-Line-Signature header value
-    signature = request.headers['X-Line-Signature']
-    # get request body as text
-    body = request.get_data(as_text=True)
-    app.logger.info("Request body: " + body)
-    # handle webhook body
-    try:
-        handler.handle(body, signature)
-    except InvalidSignatureError:
-        abort(400)
-    return 'OK'
+	# get X-Line-Signature header value
+	signature = request.headers['X-Line-Signature']
+	# get request body as text
+	body = request.get_data(as_text=True)
+	app.logger.info("Request body: " + body)
+	# handle webhook body
+	try:
+		handler.handle(body, signature)
+	except InvalidSignatureError:
+		abort(400)
+	return 'OK'
 
 
 
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    message = TextSendMessage(text='Hello, world')
-    line_bot_api.reply_message(event.reply_token, message)
-    #qryChamp = event.message.text
-    #if valid_champ(qryChamp):
-        #name = str(event.message.text)
-        #message = format_counter_msg(name.capitalize())
-        #line_bot_api.reply_message(event.reply_token, message)
-        #message = TextSendMessage("Invalid Champion... Don't play League if you can't type...")
-        #line_bot_api.reply_message(event.reply_token, message)
-    #else:
-        #message = TextSendMessage("Invalid Champion... Don't play League if you can't type...")
-        #line_bot_api.reply_message(event.reply_token, message)
+	qryChamp = event.message.text
+	message = TextSendMessage(qryChamp)
+	line_bot_api.reply_message(event.reply_token, message)
+	#if valid_champ(qryChamp):
+		#name = str(event.message.text)
+		#message = format_counter_msg(name.capitalize())
+		#line_bot_api.reply_message(event.reply_token, message)
+		#message = TextSendMessage("Invalid Champion... Don't play League if you can't type...")
+		#line_bot_api.reply_message(event.reply_token, message)
+	#else:
+		#message = TextSendMessage("Invalid Champion... Don't play League if you can't type...")
+		#line_bot_api.reply_message(event.reply_token, message)
 
 
 
 import os
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+	port = int(os.environ.get('PORT', 5000))
+	app.run(host='0.0.0.0', port=port)
