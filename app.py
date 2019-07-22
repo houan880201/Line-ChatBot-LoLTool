@@ -143,10 +143,13 @@ def handle_message(event):
 	message = TextSendMessage(qryChamp)
 	line_bot_api.reply_message(event.reply_token, message)
 	if valid_champ(qryChamp):
-		name = str(event.message.text)
+		line_bot_api.reply_message(event.reply_token, message)
+		name = event.message.text
+		line_bot_api.reply_message(event.reply_token, message)
 		message = format_counter_msg(name.capitalize())
 		line_bot_api.reply_message(event.reply_token, message)
 	else:
+		line_bot_api.reply_message(event.reply_token, message)
 		message = TextSendMessage("Invalid Champion... Don't play League if you can't type...")
 		line_bot_api.reply_message(event.reply_token, message)
 
