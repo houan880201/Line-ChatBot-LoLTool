@@ -143,10 +143,11 @@ def handle_message(event):
 	print(qryChamp)
 	qryChamp = event.message.text
 	msg = "before"
-	if valid_champ(qryChamp):
-		msg += "cool"
-	else:
-		msg += "nah"
+	try:
+		if valid_champ(qryChamp):
+			msg += "cool"
+	except:
+		msg = "try-catch error"
 	line_bot_api.reply_message(event.reply_token, msg)
 	#msg = TextSendMessage(str(res))
 	#line_bot_api.reply_message(event.reply_token, msg)
