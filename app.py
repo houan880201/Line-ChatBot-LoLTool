@@ -139,16 +139,27 @@ def callback():
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    qryChamp = event.message.text
-    if valid_champ(qryChamp):
+    try:
+        with open('champs.json') as json_data:
+            data = json.load(json_data)
+            parters = []
+            for champs in data:
+                if champs['Champion Names'] == name:
+                    for col in partner_cols:
+                        parters.append(parse_name(champs[col]))
+        line_bot_api.reply_message(event.reply_token, parters[0])
+    except:
+        line_bot_api.reply_message(event.reply_token, 'error somewhere')
+    #qryChamp = event.message.text
+    #if valid_champ(qryChamp):
         #name = str(event.message.text)
         #message = format_counter_msg(name.capitalize())
         #line_bot_api.reply_message(event.reply_token, message)
-        message = TextSendMessage("Invalid Champion... Don't play League if you can't type...")
-        line_bot_api.reply_message(event.reply_token, message)
-    else:
-        message = TextSendMessage("Invalid Champion... Don't play League if you can't type...")
-        line_bot_api.reply_message(event.reply_token, message)
+        #message = TextSendMessage("Invalid Champion... Don't play League if you can't type...")
+        #line_bot_api.reply_message(event.reply_token, message)
+    #else:
+        #message = TextSendMessage("Invalid Champion... Don't play League if you can't type...")
+        #line_bot_api.reply_message(event.reply_token, message)
 
 
 
