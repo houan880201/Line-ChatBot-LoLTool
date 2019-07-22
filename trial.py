@@ -3,6 +3,7 @@
 import json
 import time
 import unidecode
+import urllib.request
 
 counter_cols = ['1st Counter', '2nd Counter', '3rd Counter', '4th Counter', '5th Counter', '6th Counter']
 against_cols = ['1st Strong Against', '2nd Strong Against', '3rd Strong Against', '4th Strong Against', '5th Strong Against', '6th Strong Against']
@@ -18,14 +19,14 @@ def valid_champ(name):
 		return False
 
 def get_all_champions():
-    # JSON is hosted at myjson.com as well just in case
-    # url = 'https://api.myjson.com/bins/tkg0v'
-    with open('champs.json') as json_data:
-        data = json.load(json_data)
-      	allChampions = []
-      	for champ in allChampions:
-      		allChampions.append(champ['Champion Names'])
-        return allChampions
+	# JSON is hosted at myjson.com as well just in case
+	# url = 'https://api.myjson.com/bins/tkg0v'
+	with urllib.request.urlopen("https://api.myjson.com/bins/tkg0v") as url:
+		data = json.loads(url.read().decode())
+		allChampions = []
+		for champ in data:
+			allChampions.append(champ['Champion Names'])
+		return allChampions
 
 def parse_name(url):
 	return url.split('/')[-1]
@@ -37,34 +38,34 @@ def get_loc_names(counter_cols):
 	return loc_names
 
 def get_counter(name):
-    with open('champs.json') as json_data:
-        data = json.load(json_data)
-        counters = []
-        locs = []
-        for champs in data:
-        	if champs['Champion Names'] == name:
-        		for col in counter_cols:
-        			counters.append(parse_name(champs[col]))
-        		for col in get_loc_names(counter_cols):
-        			locs.append(champs[col])
-        return counters, locs
+	with urllib.request.urlopen("https://api.myjson.com/bins/tkg0v") as url:
+		data = json.loads(url.read().decode())
+		counters = []
+		locs = []
+		for champs in data:
+			if champs['Champion Names'] == name:
+				for col in counter_cols:
+					counters.append(parse_name(champs[col]))
+				for col in get_loc_names(counter_cols):
+					locs.append(champs[col])
+		return counters, locs
 
 def get_strong_against(name):
-    with open('champs.json') as json_data:
-        data = json.load(json_data)
-        against = []
-        locs = []
-        for champs in data:
-        	if champs['Champion Names'] == name:
-        		for col in against_cols:
-        			against.append(parse_name(champs[col]))
-        		for col in get_loc_names(against_cols):
-        			locs.append(champs[col])
-        return against, locs
+	with urllib.request.urlopen("https://api.myjson.com/bins/tkg0v") as url:
+		data = json.loads(url.read().decode())
+		against = []
+		locs = []
+		for champs in data:
+			if champs['Champion Names'] == name:
+				for col in against_cols:
+					against.append(parse_name(champs[col]))
+				for col in get_loc_names(against_cols):
+					locs.append(champs[col])
+		return against, locs
 
 def get_partner(name):
-	with open('champs.json') as json_data:
-		data = json.load(json_data)
+	with urllib.request.urlopen("https://api.myjson.com/bins/tkg0v") as url:
+		data = json.loads(url.read().decode())
 		parters = []
 		for champs in data:
 			if champs['Champion Names'] == name:
@@ -73,8 +74,8 @@ def get_partner(name):
 		return parters	
 
 def get_tips(name):
-	with open('champs.json') as json_data:
-		data = json.load(json_data)
+	with urllib.request.urlopen("https://api.myjson.com/bins/tkg0v") as url:
+		data = json.loads(url.read().decode())
 		tips = []
 		for champs in data:
 			if champs['Champion Names'] == name:
@@ -108,14 +109,7 @@ def format_tip_msg(name, tips):
 	return msg
 
 if __name__ == '__main__':
-	qryChamp = 'sss'
-	if valid_champ(qryChamp):
-		message = format_counter_msg(qryChamp.capitalize())
-		print(message)
-	else:
-		message = "Invalid Champion... Don't play League if you can't type..."
-		print(message)
-	
+	print(get_all_champions())
 
 
 
