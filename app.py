@@ -8,7 +8,6 @@ from linebot.exceptions import (
 )
 from linebot.models import *
 
-import inflect
 import json
 import time
 import unidecode
