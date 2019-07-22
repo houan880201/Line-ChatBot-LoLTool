@@ -8,9 +8,6 @@ from linebot.exceptions import (
 )
 from linebot.models import *
 
-import json
-import time
-import unidecode
 
 app = Flask(__name__)
 
