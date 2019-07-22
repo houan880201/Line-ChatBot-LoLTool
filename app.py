@@ -140,6 +140,14 @@ def callback():
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+
+	name = event.message.text
+	champs = get_all_champions()
+	if name in champs or name.capitalize() in champs:
+		message = 'a'
+	else:
+		message = 'b'
+
 	if event.message.text == 'Hi':
 		message = TextSendMessage("Hi back")
 		line_bot_api.reply_message(event.reply_token, message)
