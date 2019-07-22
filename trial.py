@@ -106,8 +106,14 @@ def format_tip_msg(name, tips):
 	return msg
 
 if __name__ == '__main__':
-	print(valid_champ('garen'))
-
+	qryChamp = 'sss'
+	if valid_champ(qryChamp):
+		message = format_counter_msg(qryChamp.capitalize())
+		print(message)
+	else:
+		message = "Invalid Champion... Don't play League if you can't type..."
+		print(message)
+	
 
 
 

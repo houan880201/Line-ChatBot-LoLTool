@@ -121,7 +121,6 @@ def format_tip_msg(name, tips):
     return msg
 
 
-
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -142,7 +141,10 @@ def callback():
 def handle_message(event):
     qryChamp = event.message.text
     if valid_champ(qryChamp):
-        message = format_counter_msg(event.message.text.capitalize())
+        #name = str(event.message.text)
+        #message = format_counter_msg(name.capitalize())
+        #line_bot_api.reply_message(event.reply_token, message)
+        message = TextSendMessage("Invalid Champion... Don't play League if you can't type...")
         line_bot_api.reply_message(event.reply_token, message)
     else:
         message = TextSendMessage("Invalid Champion... Don't play League if you can't type...")
