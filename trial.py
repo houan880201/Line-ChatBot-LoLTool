@@ -108,10 +108,13 @@ def format_tip_msg(name, tips):
 	return msg
 
 if __name__ == '__main__':
-	if valid_champ('garen'):
-		print('cool')
-	else:
-		print('nah')
+	try:
+		if valid_champ():
+			print('cool')
+		else:
+			print('nah')
+	except: 
+		print('error')
 
 
 
