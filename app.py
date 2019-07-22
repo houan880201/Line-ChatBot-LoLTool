@@ -140,14 +140,13 @@ def callback():
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+	print(qryChamp)
 	qryChamp = event.message.text
 	msg = "before"
-	try:
-		msg = "nothing"
-		res = valid_champ(qryChamp)
-	except:
-		msg = "error"
-	message = TextSendMessage(msg)
+	if valid_champ(qryChamp):
+		msg += "cool"
+	else:
+		msg += "nah"
 	line_bot_api.reply_message(event.reply_token, msg)
 	#msg = TextSendMessage(str(res))
 	#line_bot_api.reply_message(event.reply_token, msg)
@@ -164,8 +163,6 @@ def handle_message(event):
 		message = TextSendMessage("Invalid Champion... Don't play League if you can't type...")
 		line_bot_api.reply_message(event.reply_token, message)
 	'''
-
-
 
 
 import os

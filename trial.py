@@ -12,7 +12,6 @@ tips_cols = ['Counter Tip One','Counter Tip Two','Counter Tip Three','Counter Ti
 
 def valid_champ(name):
 	champs = get_all_champions()
-	name
 	if name in champs or name.capitalize() in champs:
 		return True
 	else:
@@ -109,8 +108,10 @@ def format_tip_msg(name, tips):
 	return msg
 
 if __name__ == '__main__':
-	print(get_all_champions())
-
+	if valid_champ('garen'):
+		print('cool')
+	else:
+		print('nah')
 
 
 
