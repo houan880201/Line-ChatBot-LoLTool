@@ -145,8 +145,9 @@ def handle_message(event):
 		line_bot_api.reply_message(event.reply_token, message)
 
 	qryChamp = event.message.text
-	msg = TextSendMessage(format_counter_msg(event.message.text))
-	line_bot_api.reply_message(event.reply_token, msg)
+	if qryChamp == 'Garen':	
+		msg = TextSendMessage('ggggg')
+		line_bot_api.reply_message(event.reply_token, msg)
 	#msg = TextSendMessage(str(res))
 	#line_bot_api.reply_message(event.reply_token, msg)
 
