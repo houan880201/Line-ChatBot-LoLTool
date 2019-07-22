@@ -22,7 +22,9 @@ def get_all_champions():
     # url = 'https://api.myjson.com/bins/tkg0v'
     with open('champs.json') as json_data:
         data = json.load(json_data)
-        allChampions = [unidecode.unidecode(listing['Champion Names']) for listing in data]
+      	allChampions = []
+      	for champ in allChampions:
+      		allChampions.append(champ['Champion Names'])
         return allChampions
 
 def parse_name(url):
