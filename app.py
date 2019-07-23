@@ -150,7 +150,6 @@ def format_tip_msg(name):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
 	input_str = event.message.text
-	message = TextSendMessage("Hi ")
 	splited = input_str.split(' ')
 	command = splited[0]
 	champ = splited[1]
@@ -159,6 +158,7 @@ def handle_message(event):
 	print(command)
 	print(champ)
 	print("!@#$%^&*")
+	message = TextSendMessage("Hi " + champ)
 	line_bot_api.reply_message(event.reply_token, message)
 
 	#msg = TextSendMessage(str(res))
