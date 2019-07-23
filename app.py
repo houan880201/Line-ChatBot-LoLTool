@@ -149,10 +149,6 @@ def callback():
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-	input_str = event.message.text
-	command = input_str.split[0]
-	name = input_str.split[1]
-
 	message = TextSendMessage("Hi ")
 	line_bot_api.reply_message(event.reply_token, message)
 
