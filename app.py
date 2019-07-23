@@ -152,9 +152,12 @@ def handle_message(event):
 	input_str = event.message.text
 	message = TextSendMessage("Hi ")
 	splited = input_str.split(' ')
+	command = splited[0]
+	champ = splited[1]
 	print("!@#$%^&*")
 	print(type(input_str))
-	print(splited)
+	print(command)
+	print(champ)
 	print("!@#$%^&*")
 	line_bot_api.reply_message(event.reply_token, message)
 
