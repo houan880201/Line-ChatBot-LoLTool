@@ -32,11 +32,16 @@ data = response.json()
 ERROR_MSG = "Type 'help' to learn... stupid..."
 
 BULB = b"\x00\x10\x00\x77"
+BULB_STR = BULB.decode('utf-8')
+EMO = b"\xF0\x9F\x98\x81"
+EMO_STR = EMO.decode('utf-8')
 
-HELP_MSG = ("\uDBC0\uDC84 The following are working commands: 'counter' for finding countering champions against your opponent,"+
-		" 'matchup' for finding good matchups for your pick, 'partner' for finding good "+
-		"partner along with your pick, 'tips' for tips playing against your opponent's pick "+ 
-		"and 'help' for getting help to use this bot...")
+HELP_MSG = (BULB_STR + "The following are working commands:" + BULB_STR +
+		"\n'counter' for finding countering champions against your opponent, "+
+		"\n'matchup' for finding good matchups for your pick, " +
+		"\n'partner' for finding good partner along with your pick, " +
+		"\n'tips' for tips playing against your opponent's pick " + 
+		"\n'help' for getting help to use this bot... ")
 
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
@@ -172,25 +177,6 @@ def handle_message(event):
 		reply_message = HELP_MSG
 		message = TextSendMessage(reply_message)
 		line_bot_api.reply_message(event.reply_token, message)
-		return 0
-
-	if input_str == "yo":
-		template_message = TemplateSendMessage(
-			type='text',
-			text="Trial MSG",
-			weights='bold',
-			color='#0000ff'
-		)
-		template_another = TemplateSendMessage(
-			type='text',
-			text='Trial again'
-		)
-		line_bot_api.reply_message(
-			event.reply_token,
-			template_message)
-		line_bot_api.reply_message(
-			event.reply_token,
-			template_another)
 		return 0
 
 	splited = input_str.split(' ')
