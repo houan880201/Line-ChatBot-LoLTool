@@ -6,10 +6,14 @@ import unidecode
 import urllib.request
 import requests
 
-counter_cols = ['1st Counter', '2nd Counter', '3rd Counter', '4th Counter', '5th Counter', '6th Counter']
-against_cols = ['1st Strong Against', '2nd Strong Against', '3rd Strong Against', '4th Strong Against', '5th Strong Against', '6th Strong Against']
-partner_cols = ['1st Good Partner', '2nd Good Partner', '3rd Good Partner', '4th Good Partner', '5th Good Partner', '6th Good Partner']
+counter_cols = ['Top Counter', 'Second Counter', 'Third Counter', 'Fourth Counter', 'Fifth Counter', 'Sixth Counter']
+order_cols = ['First Counter', 'Second Counter', 'Third Counter', 'Fourth Counter', 'Fifth Counter', 'Sixth Counter']
+against_cols = ['First Strong Against', 'Second Strong Against', 'Third Strong Against', 'Fourth Strong Against', 'Fifth Strong Against', 'Sixth Strong Against']
+partner_cols = ['First Good Partner', 'Second Good Partner', 'Third Good Partner', 'Fourth Good Partner', 'Fifth Good Partner', 'Sixth Good Partner']
 tips_cols = ['Counter Tip One','Counter Tip Two','Counter Tip Three','Counter Tip Four']
+
+response = requests.get("https://api.myjson.com/bins/tkg0v")
+data = json.loads(response.text)
 
 def valid_champ(name):
 	champs = get_all_champions()
@@ -21,8 +25,6 @@ def valid_champ(name):
 def get_all_champions():
 	# JSON is hosted at myjson.com as well just in case
 	# url = 'https://api.myjson.com/bins/tkg0v'
-	response = requests.get("https://api.myjson.com/bins/tkg0v")
-	data = json.loads(response.text)
 	allChampions = []
 	for champ in data:
 		allChampions.append(champ['Champion Names'])
@@ -38,21 +40,20 @@ def get_loc_names(counter_cols):
 	return loc_names
 
 def get_counter(name):
-	response = requests.get("https://api.myjson.com/bins/tkg0v")
-	data = json.loads(response.text)
+	if not valid_champ(name):
+		print("input " + name)
+		return -1, -1
 	counters = []
 	locs = []
 	for champs in data:
 		if champs['Champion Names'] == name:
 			for col in counter_cols:
 				counters.append(parse_name(champs[col]))
-			for col in get_loc_names(counter_cols):
+			for col in get_loc_names(order_cols):
 				locs.append(champs[col])
 	return counters, locs
 
 def get_strong_against(name):
-	response = requests.get("https://api.myjson.com/bins/tkg0v")
-	data = json.loads(response.text)
 	against = []
 	locs = []
 	for champs in data:
@@ -64,8 +65,6 @@ def get_strong_against(name):
 	return against, locs
 
 def get_partner(name):
-	response = requests.get("https://api.myjson.com/bins/tkg0v")
-	data = json.loads(response.text)
 	parters = []
 	for champs in data:
 		if champs['Champion Names'] == name:
@@ -74,8 +73,6 @@ def get_partner(name):
 	return parters	
 
 def get_tips(name):
-	response = requests.get("https://api.myjson.com/bins/tkg0v")
-	data = json.loads(response.text)
 	tips = []
 	for champs in data:
 		if champs['Champion Names'] == name:
@@ -85,13 +82,18 @@ def get_tips(name):
 
 def format_counter_msg(name):
 	counters, locs = get_counter(name)
-	msg = ""
-	for i in range(len(counters)):
-		msg += "{} counters {} at {}. \n".format(counters[i], name, locs[i])
-	return msg
+	if counters == -1 or locs == -1:
+		return "Invalid input"
+	else:
+		msg = ""
+		for i in range(len(counters)):
+			msg += "{} counters {} at {}. \n".format(counters[i], name, locs[i])
+		return msg
 
 def format_against_msg(name):
 	against, locs = get_strong_against(name)
+	if against == -1 or locs == -1:
+		return "Invalid input"
 	msg = ""
 	for i in range(len(against)):
 		msg += "{} is strong against {} at {}. \n".format(name, against[i], locs[i])
@@ -99,6 +101,8 @@ def format_against_msg(name):
 
 def format_partner_msg(name):
 	partners = get_partner(name)
+	if partners == -1:
+		return "Invalid input"
 	msg = ""
 	for i in range(len(partners)):
 		msg += "{} goes well with {}. \n".format(partners[i], name)
@@ -106,13 +110,16 @@ def format_partner_msg(name):
 
 def format_tip_msg(name):
 	tips = get_tips(name)
+	if tips == -1:
+		return "Invalid input"
 	msg = "To beat {}... \n".format(name)
 	for i in range(len(tips)):
 		msg += "{} \n".format(tips[i])
 	return msg
 
 if __name__ == '__main__':
-	print(get_all_champions())
+	db = get_all_champions()
+	print(format_counter_msg("Gare"))
 
 
 
