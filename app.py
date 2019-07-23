@@ -31,12 +31,13 @@ data = response.json()
 
 ERROR_MSG = "Type 'help' to learn... stupid..."
 
-BULB = b"\x00\x10\x00\x77"
-BULB_STR = BULB.decode('utf-8')
 EMO = b"\xF0\x9F\x98\x81"
 EMO_STR = EMO.decode('utf-8')
 
-HELP_MSG = (EMO_STR + "The following are working commands:" + EMO_STR +
+THUMB = b"\xF0\x9F\x91\x8D"
+THUMB_STR = THUMB.decode('utf-8')
+
+HELP_MSG = (EMO_STR + "The following are working commands:" +
 		"\n'counter' for finding countering champions against your opponent, "+
 		"\n'matchup' for finding good matchups for your pick, " +
 		"\n'partner' for finding good partner along with your pick, " +
@@ -140,7 +141,7 @@ def format_against_msg(name):
 		return "Invalid input"
 	msg = ""
 	for i in range(len(against)):
-		msg += "{} is strong against {} at {}. \n".format(name, against[i], locs[i])
+		msg += THUMB_STR + "{} is strong against {} at {}. \n".format(name, against[i], locs[i])
 	return msg
 
 def format_partner_msg(name):
