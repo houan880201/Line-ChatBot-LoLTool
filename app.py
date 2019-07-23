@@ -31,7 +31,9 @@ data = response.json()
 
 ERROR_MSG = "Type 'help' to learn... stupid..."
 
-HELP_MSG = ("The following are working commands: 'counter' for finding countering champions against your opponent,"+
+BULB = b"\x00\x10\x00\x77"
+
+HELP_MSG = (BULB.decode('utf-8') + "The following are working commands: 'counter' for finding countering champions against your opponent,"+
 		" 'matchup' for finding good matchups for your pick, 'partner' for finding good "+
 		"partner along with your pick, 'tips' for tips playing against your opponent's pick "+ 
 		"and 'help' for getting help to use this bot...")
