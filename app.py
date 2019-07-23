@@ -150,6 +150,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
 	message = TextSendMessage("Hi ")
+	print(type(data))
 	line_bot_api.reply_message(event.reply_token, message)
 
 	#msg = TextSendMessage(str(res))
