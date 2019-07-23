@@ -32,12 +32,15 @@ data = response.json()
 ERROR_MSG = "Type 'help' to learn... stupid..."
 
 EMO = b"\xF0\x9F\x98\x81"
-EMO_STR = EMO.decode('utf-8')
-
 THUMB = b"\xF0\x9F\x91\x8D"
-THUMB_STR = THUMB.decode('utf-8')
+EYE = b"\xF0\x9F\x91\x80"
+HANDS = b"\xF0\x9F\x99\x8C"
+BULB = b"\xF0\x9F\x92\xA1"
 
-HELP_MSG = (EMO_STR + "The following are working commands:" +
+def get_emoji(code):
+	return code.decode('utf-8')
+
+HELP_MSG = (get_emoji(EMO) + "The following are working commands:" +
 		"\n'counter' for finding countering champions against your opponent, "+
 		"\n'matchup' for finding good matchups for your pick, " +
 		"\n'partner' for finding good partner along with your pick, " +
@@ -127,16 +130,18 @@ def get_tips(name):
 
 def format_counter_msg(name):
 	counters, locs = get_counter(name)
+	EYE_STR = get_emoji(EYE)
 	if counters == -1 or locs == -1:
 		return "Invalid input"
 	else:
 		msg = ""
 		for i in range(len(counters)):
-			msg += "{} counters {} at {}. \n".format(counters[i], name, locs[i])
+			msg += EYE_STR+ "{} counters {} at {}. \n".format(counters[i], name, locs[i])
 		return msg
 
 def format_against_msg(name):
 	against, locs = get_strong_against(name)
+	THUMB_STR = get_emoji(THUMB)
 	if against == -1 or locs == -1:
 		return "Invalid input"
 	msg = ""
@@ -146,20 +151,22 @@ def format_against_msg(name):
 
 def format_partner_msg(name):
 	partners = get_partner(name)
+	HANDS_STR = get_emoji(HANDS)
 	if partners == -1:
 		return "Invalid input"
 	msg = ""
 	for i in range(len(partners)):
-		msg += "{} goes well with {}. \n".format(partners[i], name)
+		msg += HANDS_STR + "{} goes well with {}. \n".format(partners[i], name)
 	return msg
 
 def format_tip_msg(name):
 	tips = get_tips(name)
+	BULB_STR = get_emoji(BULB)
 	if tips == -1:
 		return "Invalid input"
 	msg = "To beat {}... \n".format(name)
 	for i in range(len(tips)):
-		msg += "{} \n".format(tips[i])
+		msg += BULB_STR + "{} \n".format(tips[i])
 	return msg
 
 

@@ -15,6 +15,8 @@ tips_cols = ['Counter Tip One','Counter Tip Two','Counter Tip Three','Counter Ti
 response = requests.get("https://api.myjson.com/bins/tkg0v")
 data = json.loads(response.text)
 
+from bs4 import BeautifulSoup
+
 def valid_champ(name):
 	champs = get_all_champions()
 	if name in champs or name.capitalize() in champs:
@@ -117,9 +119,20 @@ def format_tip_msg(name):
 		msg += "{} \n".format(tips[i])
 	return msg
 
+def get_tier_list():
+    target_url = 'http://www.eyny.com/forum-205-1.html'
+    print('Start parsing website...')
+    rs = requests.session()
+    res = rs.get(target_url, verify=False)
+    soup = BeautifulSoup(res.text, 'html.parser')
+    content = ''
+    return content
+
+
+
 if __name__ == '__main__':
 	db = get_all_champions()
-	print(format_counter_msg("Gare"))
+	print(format_counter_msg("Garen"))
 
 
 
