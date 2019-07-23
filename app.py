@@ -171,6 +171,7 @@ def handle_message(event):
 	if input_str == "help":
 		reply_message = HELP_MSG
 		message = TextSendMessage(reply_message)
+		message += TextMessage(" i added this")
 		line_bot_api.reply_message(event.reply_token, message)
 		return 0
 
