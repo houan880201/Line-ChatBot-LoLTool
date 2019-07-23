@@ -47,6 +47,18 @@ HELP_MSG = (get_emoji(EMO) + "The following are working commands:" +
 		"\n'tips' for tips playing against your opponent's pick " + 
 		"\n'help' for getting help to use this bot... ")
 
+'''
+TODO:
+
+Find Builds for champions
+
+Find level upgrading for champions
+
+Find champion tiers
+
+'''
+
+
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -207,7 +219,7 @@ def handle_message(event):
 	elif command == "matchup":
 		reply_message = format_against_msg(champ)
 
-	elif command == 'tip':
+	elif command == 'tips':
 		reply_message = format_tip_msg(champ)
 
 	else:
