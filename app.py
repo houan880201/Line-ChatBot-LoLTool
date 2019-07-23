@@ -18,7 +18,7 @@ handler = WebhookHandler('88095fca9a435628a8522c92f8d601e9')
 import urllib
 import requests
 import random
-from bs4 import BeautifulSoup
+#from bs4 import BeautifulSoup
 
 counter_cols = ['Top Counter', 'Second Counter', 'Third Counter', 'Fourth Counter', 'Fifth Counter', 'Sixth Counter']
 order_cols = ['First Counter', 'Second Counter', 'Third Counter', 'Fourth Counter', 'Fifth Counter', 'Sixth Counter']
