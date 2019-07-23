@@ -153,12 +153,16 @@ def handle_message(event):
 	splited = input_str.split(' ')
 	command = splited[0]
 	champ = splited[1]
-	print("!@#$%^&*")
-	print(type(input_str))
-	print(command)
-	print(champ)
-	print("!@#$%^&*")
-	reply_message = format_counter_msg(champ)
+	if command.lower() == "counter":
+		reply_message = format_counter_msg(champ)
+	elif command.lower() == "partner":
+		reply_message = format_partner_msg(champ)
+	elif command.lower() == "matchup":
+		reply_message = format_against_msg(champ)
+	elif command.lower() == 'tip':
+		reply_message = format_tip_msg(champ)
+	else:
+		reply_message = "Type a valid command kid..."
 	message = TextSendMessage(reply_message)
 	line_bot_api.reply_message(event.reply_token, message)
 
