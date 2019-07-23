@@ -176,23 +176,23 @@ def handle_message(event):
 
 	if input_str == "yo":
 		carousel_template_message = TemplateSendMessage(
-            alt_text='ImageCarousel template',
-            template=ImageCarouselTemplate(
-                columns=[
-                    ImageCarouselColumn(
-                        image_url='https://i.imgur.com/g8zAYMq.jpg',
-                        action=URIAction(
-                            label='加我好友試玩',
-                            uri='https://line.me/R/ti/p/%40gmy1077x'
-                        ),
-                    ),
-                ]
-            )
-        )
-        line_bot_api.reply_message(
-            event.reply_token,
-            carousel_template_message)
-        return 0
+			alt_text='ImageCarousel template',
+			template=ImageCarouselTemplate(
+				columns=[
+					ImageCarouselColumn(
+						image_url='https://i.imgur.com/g8zAYMq.jpg',
+						action=URIAction(
+							label='加我好友試玩',
+							uri='https://line.me/R/ti/p/%40gmy1077x'
+						),
+					),
+				]
+			)
+		)
+		line_bot_api.reply_message(
+			event.reply_token,
+			carousel_template_message)
+		return 0
 
 	splited = input_str.split(' ')
 
