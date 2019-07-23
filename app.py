@@ -17,6 +17,8 @@ handler = WebhookHandler('88095fca9a435628a8522c92f8d601e9')
 
 import urllib
 import requests
+import random
+from bs4 import BeautifulSoup
 
 counter_cols = ['Top Counter', 'Second Counter', 'Third Counter', 'Fourth Counter', 'Fifth Counter', 'Sixth Counter']
 order_cols = ['First Counter', 'Second Counter', 'Third Counter', 'Fourth Counter', 'Fifth Counter', 'Sixth Counter']
@@ -26,6 +28,13 @@ tips_cols = ['Counter Tip One','Counter Tip Two','Counter Tip Three','Counter Ti
 
 response = requests.get("https://api.myjson.com/bins/tkg0v")
 data = response.json()
+
+ERROR_MSG = "Type 'help' to learn... stupid..."
+
+HELP_MSG = ("The following are working commands: 'counter' for finding countering champions against your opponent,"+
+		" 'matchup' for finding good matchups for your pick, 'partner' for finding good "+
+		"partner along with your pick, 'tips' for tips playing against your opponent's pick "+ 
+		"and 'help' for getting help to use this bot...")
 
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
@@ -150,37 +159,43 @@ def format_tip_msg(name):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
 	input_str = event.message.text
+
+	if input_str == "":
+		reply_message = "Type something... \n" + ERROR_MSG
+		message = TextSendMessage(reply_message)
+		line_bot_api.reply_message(event.reply_token, message)
+		return 0
+
 	splited = input_str.split(' ')
-	command = splited[0]
-	champ = splited[1]
+
+	if len(splited) == 1:
+		reply_message = "One word only...? \n" + ERROR_MSG
+		message = TextSendMessage(reply_message)
+		line_bot_api.reply_message(event.reply_token, message)
+		return 0
+
+	champ = splited[1].capitalize()
+
 	if command.lower() == "counter":
 		reply_message = format_counter_msg(champ)
+
 	elif command.lower() == "partner":
 		reply_message = format_partner_msg(champ)
+
 	elif command.lower() == "matchup":
 		reply_message = format_against_msg(champ)
+
 	elif command.lower() == 'tip':
 		reply_message = format_tip_msg(champ)
+
+	elif command.lower() == 'help':
+		reply_message = HELP_MSG
+
 	else:
-		reply_message = "Type a valid command kid..."
+		reply_message = "Type a valid command kid..." + ERROR_MSG
+
 	message = TextSendMessage(reply_message)
 	line_bot_api.reply_message(event.reply_token, message)
-
-	#msg = TextSendMessage(str(res))
-	#line_bot_api.reply_message(event.reply_token, msg)
-
-	'''
-	if valid_champ(qryChamp):
-		line_bot_api.reply_message(event.reply_token, message)
-		name = event.message.text
-		line_bot_api.reply_message(event.reply_token, message)
-		message = format_counter_msg(name.capitalize())
-		line_bot_api.reply_message(event.reply_token, message)
-	else:
-		line_bot_api.reply_message(event.reply_token, message)
-		message = TextSendMessage("Invalid Champion... Don't play League if you can't type...")
-		line_bot_api.reply_message(event.reply_token, message)
-	'''
 
 
 import os
