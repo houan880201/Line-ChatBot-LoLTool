@@ -196,7 +196,7 @@ def handle_message(event):
 		          {
 		            "type": "text",
 		            "text": "Arm Chair, White",
-		            "wrap": true,
+		            "wrap": True,
 		            "weight": "bold",
 		            "size": "xl"
 		          },
@@ -207,7 +207,7 @@ def handle_message(event):
 		              {
 		                "type": "text",
 		                "text": "$49",
-		                "wrap": true,
+		                "wrap": True,
 		                "weight": "bold",
 		                "size": "xl",
 		                "flex": 0
@@ -215,7 +215,7 @@ def handle_message(event):
 		              {
 		                "type": "text",
 		                "text": ".99",
-		                "wrap": true,
+		                "wrap": True,
 		                "weight": "bold",
 		                "size": "sm",
 		                "flex": 0
