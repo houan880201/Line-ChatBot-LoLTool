@@ -33,7 +33,7 @@ ERROR_MSG = "Type 'help' to learn... stupid..."
 
 BULB = b"\x00\x10\x00\x77"
 
-HELP_MSG = (BULB.decode('utf-8') + "The following are working commands: 'counter' for finding countering champions against your opponent,"+
+HELP_MSG = ("\uDBC0\uDC84 The following are working commands: 'counter' for finding countering champions against your opponent,"+
 		" 'matchup' for finding good matchups for your pick, 'partner' for finding good "+
 		"partner along with your pick, 'tips' for tips playing against your opponent's pick "+ 
 		"and 'help' for getting help to use this bot...")
