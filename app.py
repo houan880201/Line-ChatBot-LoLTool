@@ -36,7 +36,7 @@ BULB_STR = BULB.decode('utf-8')
 EMO = b"\xF0\x9F\x98\x81"
 EMO_STR = EMO.decode('utf-8')
 
-HELP_MSG = (BULB_STR + "The following are working commands:" + BULB_STR +
+HELP_MSG = (EMO_STR + "The following are working commands:" + EMO_STR +
 		"\n'counter' for finding countering champions against your opponent, "+
 		"\n'matchup' for finding good matchups for your pick, " +
 		"\n'partner' for finding good partner along with your pick, " +
