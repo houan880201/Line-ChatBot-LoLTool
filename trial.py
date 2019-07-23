@@ -4,6 +4,7 @@ import json
 import time
 import unidecode
 import urllib.request
+import requests
 
 counter_cols = ['1st Counter', '2nd Counter', '3rd Counter', '4th Counter', '5th Counter', '6th Counter']
 against_cols = ['1st Strong Against', '2nd Strong Against', '3rd Strong Against', '4th Strong Against', '5th Strong Against', '6th Strong Against']
@@ -20,12 +21,12 @@ def valid_champ(name):
 def get_all_champions():
 	# JSON is hosted at myjson.com as well just in case
 	# url = 'https://api.myjson.com/bins/tkg0v'
-	with urllib.request.urlopen("https://api.myjson.com/bins/tkg0v") as url:
-		data = json.loads(url.read().decode())
-		allChampions = []
-		for champ in data:
-			allChampions.append(champ['Champion Names'])
-		return allChampions
+	response = requests.get("https://api.myjson.com/bins/tkg0v")
+	data = json.loads(response.text)
+	allChampions = []
+	for champ in data:
+		allChampions.append(champ['Champion Names'])
+	return allChampions
 
 def parse_name(url):
 	return url.split('/')[-1]
@@ -37,50 +38,50 @@ def get_loc_names(counter_cols):
 	return loc_names
 
 def get_counter(name):
-	with urllib.request.urlopen("https://api.myjson.com/bins/tkg0v") as url:
-		data = json.loads(url.read().decode())
-		counters = []
-		locs = []
-		for champs in data:
-			if champs['Champion Names'] == name:
-				for col in counter_cols:
-					counters.append(parse_name(champs[col]))
-				for col in get_loc_names(counter_cols):
-					locs.append(champs[col])
-		return counters, locs
+	response = requests.get("https://api.myjson.com/bins/tkg0v")
+	data = json.loads(response.text)
+	counters = []
+	locs = []
+	for champs in data:
+		if champs['Champion Names'] == name:
+			for col in counter_cols:
+				counters.append(parse_name(champs[col]))
+			for col in get_loc_names(counter_cols):
+				locs.append(champs[col])
+	return counters, locs
 
 def get_strong_against(name):
-	with urllib.request.urlopen("https://api.myjson.com/bins/tkg0v") as url:
-		data = json.loads(url.read().decode())
-		against = []
-		locs = []
-		for champs in data:
-			if champs['Champion Names'] == name:
-				for col in against_cols:
-					against.append(parse_name(champs[col]))
-				for col in get_loc_names(against_cols):
-					locs.append(champs[col])
-		return against, locs
+	response = requests.get("https://api.myjson.com/bins/tkg0v")
+	data = json.loads(response.text)
+	against = []
+	locs = []
+	for champs in data:
+		if champs['Champion Names'] == name:
+			for col in against_cols:
+				against.append(parse_name(champs[col]))
+			for col in get_loc_names(against_cols):
+				locs.append(champs[col])
+	return against, locs
 
 def get_partner(name):
-	with urllib.request.urlopen("https://api.myjson.com/bins/tkg0v") as url:
-		data = json.loads(url.read().decode())
-		parters = []
-		for champs in data:
-			if champs['Champion Names'] == name:
-				for col in partner_cols:
-					parters.append(parse_name(champs[col]))
-		return parters	
+	response = requests.get("https://api.myjson.com/bins/tkg0v")
+	data = json.loads(response.text)
+	parters = []
+	for champs in data:
+		if champs['Champion Names'] == name:
+			for col in partner_cols:
+				parters.append(parse_name(champs[col]))
+	return parters	
 
 def get_tips(name):
-	with urllib.request.urlopen("https://api.myjson.com/bins/tkg0v") as url:
-		data = json.loads(url.read().decode())
-		tips = []
-		for champs in data:
-			if champs['Champion Names'] == name:
-				for col in tips_cols:
-					tips.append(parse_name(champs[col]))	
-		return tips
+	response = requests.get("https://api.myjson.com/bins/tkg0v")
+	data = json.loads(response.text)
+	tips = []
+	for champs in data:
+		if champs['Champion Names'] == name:
+			for col in tips_cols:
+				tips.append(parse_name(champs[col]))	
+	return tips
 
 def format_counter_msg(name):
 	counters, locs = get_counter(name)
@@ -89,32 +90,29 @@ def format_counter_msg(name):
 		msg += "{} counters {} at {}. \n".format(counters[i], name, locs[i])
 	return msg
 
-def format_against_msg(name, against, locs):
+def format_against_msg(name):
+	against, locs = get_strong_against(name)
 	msg = ""
 	for i in range(len(against)):
 		msg += "{} is strong against {} at {}. \n".format(name, against[i], locs[i])
 	return msg
 
-def format_partner_msg(name, partners):
+def format_partner_msg(name):
+	partners = get_partner(name)
 	msg = ""
 	for i in range(len(partners)):
 		msg += "{} goes well with {}. \n".format(partners[i], name)
 	return msg
 
-def format_tip_msg(name, tips):
+def format_tip_msg(name):
+	tips = get_tips(name)
 	msg = "To beat {}... \n".format(name)
 	for i in range(len(tips)):
 		msg += "{} \n".format(tips[i])
 	return msg
 
 if __name__ == '__main__':
-	try:
-		if valid_champ():
-			print('cool')
-		else:
-			print('nah')
-	except: 
-		print('error')
+	print(get_all_champions())
 
 
 
