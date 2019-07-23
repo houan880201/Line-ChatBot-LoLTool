@@ -158,7 +158,8 @@ def handle_message(event):
 	print(command)
 	print(champ)
 	print("!@#$%^&*")
-	message = TextSendMessage("Hi " + champ)
+	reply_message = format_counter_msg(champ)
+	message = TextSendMessage(reply_message)
 	line_bot_api.reply_message(event.reply_token, message)
 
 	#msg = TextSendMessage(str(res))
