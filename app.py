@@ -27,6 +27,22 @@ tips_cols = ['Counter Tip One','Counter Tip Two','Counter Tip Three','Counter Ti
 response = requests.get("https://api.myjson.com/bins/tkg0v")
 data = response.json()
 
+# 監聽所有來自 /callback 的 Post Request
+@app.route("/callback", methods=['POST'])
+def callback():
+	# get X-Line-Signature header value
+	signature = request.headers['X-Line-Signature']
+	# get request body as text
+	body = request.get_data(as_text=True)
+	app.logger.info("Request body: " + body)
+	# handle webhook body
+	try:
+		handler.handle(body, signature)
+	except InvalidSignatureError:
+		abort(400)
+	return 'OK'
+
+
 def valid_champ(name):
 	champs = get_all_champions()
 	if name in champs or name.capitalize() in champs:
@@ -130,27 +146,16 @@ def format_tip_msg(name):
 	return msg
 
 
-# 監聽所有來自 /callback 的 Post Request
-@app.route("/callback", methods=['POST'])
-def callback():
-	# get X-Line-Signature header value
-	signature = request.headers['X-Line-Signature']
-	# get request body as text
-	body = request.get_data(as_text=True)
-	app.logger.info("Request body: " + body)
-	# handle webhook body
-	try:
-		handler.handle(body, signature)
-	except InvalidSignatureError:
-		abort(400)
-	return 'OK'
-
-
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+	input_str = event.message.text
 	message = TextSendMessage("Hi ")
-	print(type(data))
+	command = input_str.split[0]
+	name = input_str.split[1]
+	print(type(input_str))
+	print(command)
+	print(name)
 	line_bot_api.reply_message(event.reply_token, message)
 
 	#msg = TextSendMessage(str(res))
