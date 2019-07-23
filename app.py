@@ -266,7 +266,7 @@ def handle_message(event):
 		          {
 		            "type": "text",
 		            "text": "Metal Desk Lamp",
-		            "wrap": true,
+		            "wrap": True,
 		            "weight": "bold",
 		            "size": "xl"
 		          },
@@ -278,7 +278,7 @@ def handle_message(event):
 		              {
 		                "type": "text",
 		                "text": "$11",
-		                "wrap": true,
+		                "wrap": True,
 		                "weight": "bold",
 		                "size": "xl",
 		                "flex": 0
@@ -286,7 +286,7 @@ def handle_message(event):
 		              {
 		                "type": "text",
 		                "text": ".99",
-		                "wrap": true,
+		                "wrap": True,
 		                "weight": "bold",
 		                "size": "sm",
 		                "flex": 0
@@ -296,7 +296,7 @@ def handle_message(event):
 		          {
 		            "type": "text",
 		            "text": "Temporarily out of stock",
-		            "wrap": true,
+		            "wrap": True,
 		            "size": "xxs",
 		            "margin": "md",
 		            "color": "#ff5551",
