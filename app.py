@@ -166,6 +166,12 @@ def handle_message(event):
 		line_bot_api.reply_message(event.reply_token, message)
 		return 0
 
+	if input_str == "help":
+		reply_message = HELP_MSG
+		message = TextSendMessage(reply_message)
+		line_bot_api.reply_message(event.reply_token, message)
+		return 0
+
 	splited = input_str.split(' ')
 
 	if len(splited) == 1:
@@ -187,9 +193,6 @@ def handle_message(event):
 
 	elif command.lower() == 'tip':
 		reply_message = format_tip_msg(champ)
-
-	elif command.lower() == 'help':
-		reply_message = HELP_MSG
 
 	else:
 		reply_message = "Type a valid command kid..." + ERROR_MSG
