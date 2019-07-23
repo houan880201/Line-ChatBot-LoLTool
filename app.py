@@ -180,18 +180,19 @@ def handle_message(event):
 		line_bot_api.reply_message(event.reply_token, message)
 		return 0
 
+	command = splited[0].lower()
 	champ = splited[1].capitalize()
 
-	if command.lower() == "counter":
+	if command == "counter":
 		reply_message = format_counter_msg(champ)
 
-	elif command.lower() == "partner":
+	elif command == "partner":
 		reply_message = format_partner_msg(champ)
 
-	elif command.lower() == "matchup":
+	elif command == "matchup":
 		reply_message = format_against_msg(champ)
 
-	elif command.lower() == 'tip':
+	elif command == 'tip':
 		reply_message = format_tip_msg(champ)
 
 	else:
