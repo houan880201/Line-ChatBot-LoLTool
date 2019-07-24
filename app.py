@@ -269,23 +269,12 @@ def handle_message(event):
 
 	if input_str == 'image':
 		imagemap_message = ImagemapSendMessage(
-            base_url='https://example.com/base',
+            base_url='https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2018-06-26/387839795169_9776bdf0a8510b40c130_512.png',
             alt_text='this is an imagemap',
             base_size=BaseSize(height=1040, width=1040),
-            video=Video(
-                original_content_url='https://example.com/video.mp4',
-                preview_image_url='https://example.com/video_preview.jpg',
-                area=ImagemapArea(
-                    x=0, y=0, width=1040, height=585
-                ),
-                external_link=ExternalLink(
-                    link_uri='https://example.com/see_more.html',
-                    label='See More',
-                ),
-            ),
             actions=[
                 URIImagemapAction(
-                    link_uri='https://example.com/',
+                    link_uri='https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2018-06-26/387839795169_9776bdf0a8510b40c130_512.png',
                     area=ImagemapArea(
                         x=0, y=0, width=520, height=1040
                     )
