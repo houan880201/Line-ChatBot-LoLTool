@@ -191,23 +191,22 @@ def get_champ_win_rates():
 		all_rates[pos[i]] = lane_rates
 	return all_rates
 
-def get_lane_rates(lane):
-	if lane not in pos:
-		return -1
-	rates = get_champ_win_rates()
-	return rates[lane]
 
-def format_rates_msg(pos):
-	lane_rates = get_lane_rates(pos)
-	if lane_rates = -1:
-		return "Invalid Input"
-	msg = "The win rates for the champions at {}...\n".format(pos)
-	for champ in lone_rates:
-		msg += "{} has a win rate of {}".format(champ, lane_rates[champ])
-	return msg
+def get_op_build(champion, lane):
+	target_url = "https://tw.op.gg/champion/{}/statistics/{}".format(champion.lower(), lane.lower())
+	headers = {'Accept-Language': 'en-US'}
+	print('Start parsing website...')
+	rs = requests.session()
+	rs.headers.update({"Accept-Language": "en-US,en;q=0.5"})
+	res = rs.get(target_url, verify=True, headers=headers)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	thead = soup.find("div", {"class":"l-champion-statistics-content__main"}).findAll("table")[0].findAll('thead')[0]
+	tbody = soup.find("div", {"class":"l-champion-statistics-content__main"}).findAll("table")[0].findAll('thead')[1]
+	content = thead
+	return content
 
 if __name__ == '__main__':
-	print(get_champ_win_rates())
+	print(get_op_build("aatrox", "top"))
 
 
 

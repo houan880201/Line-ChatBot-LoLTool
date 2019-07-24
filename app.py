@@ -53,6 +53,7 @@ HELP_MSG = (get_emoji(EMO) + "The following are working commands:" +
 		"\n-partner > find good partner along with input champ, " +
 		"\n-tips > find tips for playing against input champ " + 
 		"\n-tier > find the god tier champions for (Top, Jg, Mid, Bottom, Sup)" +
+		"\n-win > find the few highest win rates for (Top, Jg, Mid, Bottom, Sup)" +
 		"\n-help for getting help to use this bot... " + 
 		"\n \n Use correct champion name after each command except help!")
 
@@ -251,7 +252,7 @@ def format_rates_msg(pos):
 		return "Invalid Input"
 	msg = "The win rates for the champions at {}...".format(pos)
 	for champ in lane_rates:
-		msg += "\n{}{} has a win rate of {}".format(TROPHY_STR, champ, lane_rates[champ])
+		msg += "\n{}{} -win rate- {}".format(TROPHY_STR, champ, lane_rates[champ])
 	return msg
 
 
