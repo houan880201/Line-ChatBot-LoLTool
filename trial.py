@@ -120,20 +120,20 @@ def format_tip_msg(name):
 	return msg
 
 def get_tier_list():
-    target_url = 'http://www.eyny.com/forum-205-1.html'
-    print('Start parsing website...')
-    rs = requests.session()
-    res = rs.get(target_url, verify=False)
-    soup = BeautifulSoup(res.text, 'html.parser')
-    content = ''
-    return content
+	headers = {'Accept-Language': 'en-US,en;q=0.8'}
+	target_url = 'https://na.op.gg/champion/statistics'
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True, headers=headers)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	side = soup.select(".l-champion-index-content--side")
+	content = side
+	return content
 
 
 
 if __name__ == '__main__':
-	db = get_all_champions()
-	print(format_counter_msg("Garen"))
-
+	print(get_tier_list())
 
 
 

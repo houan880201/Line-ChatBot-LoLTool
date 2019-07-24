@@ -193,7 +193,7 @@ def handle_message(event):
 		line_bot_api.reply_message(event.reply_token, message)
 		return 0
 
-	if input_str == "help":
+	if input_str == "help" or input_str == "Help":
 		reply_message = HELP_MSG
 		message = TextSendMessage(reply_message)
 		line_bot_api.reply_message(event.reply_token, message)
