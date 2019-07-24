@@ -156,7 +156,7 @@ def format_counter_msg(name):
 	if counters == -1 or locs == -1:
 		return "Invalid input"
 	for i in range(len(counters)):
-		msg += "\n{}... {} at {}.".format(EYE_STR, counters[i], locs[i])
+		msg += "\n{}{} at {}.".format(EYE_STR, counters[i], locs[i])
 	return msg
 
 def format_against_msg(name):
@@ -166,7 +166,7 @@ def format_against_msg(name):
 	if against == -1 or locs == -1:
 		return "Invalid input"
 	for i in range(len(against)):
-		msg +=  "\n... {} at {}.".format(THUMB_STR, against[i], locs[i])
+		msg +=  "\n{}{} at {}.".format(THUMB_STR, against[i], locs[i])
 	return msg
 
 def format_partner_msg(name):
@@ -250,7 +250,7 @@ def format_rates_msg(pos):
 	if lane_rates == -1:
 		return "Invalid Input"
 	msg = "The win rates for the champions at {}...".format(pos)
-	for champ in lone_rates:
+	for champ in lane_rates:
 		msg += "\n{}{} has a win rate of {}".format(TROPHY_STR, champ, lane_rates[champ])
 	return msg
 
