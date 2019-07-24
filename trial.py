@@ -191,6 +191,38 @@ def get_champ_win_rates():
 		all_rates[pos[i]] = lane_rates
 	return all_rates
 
+message = {
+  "type": "imagemap",
+  "baseUrl": "圖片網址的一部分",
+  "altText": "在不支援顯示影像地圖的地方顯示的文字",
+  "baseSize": {
+    "height": 1040,
+    "width": 1040
+  },
+  "actions": [
+    {
+      "type": "uri",
+      "linkUri": "https://www.kamigo.tw/",
+      "label": "https://www.kamigo.tw/",
+      "area": {
+        "x": 0,
+        "y": 0,
+        "width": 520,
+        "height": 1040
+      }
+    },
+    {
+      "type": "message",
+      "text": "傳送文字",
+      "area": {
+        "x": 520,
+        "y": 0,
+        "width": 520,
+        "height": 1040
+      }
+    }
+  ]
+}
 
 def get_op_build(champion, lane):
 	target_url = "https://tw.op.gg/champion/{}/statistics/{}".format(champion.lower(), lane.lower())
@@ -201,8 +233,8 @@ def get_op_build(champion, lane):
 	res = rs.get(target_url, verify=True, headers=headers)
 	soup = BeautifulSoup(res.text, 'html.parser')
 	thead = soup.find("div", {"class":"l-champion-statistics-content__main"}).findAll("table")[0].findAll('thead')[0]
-	tbody = soup.find("div", {"class":"l-champion-statistics-content__main"}).findAll("table")[0].findAll('thead')[1]
-	content = thead
+	tbody = soup.find("div", {"class":"l-champion-statistics-content__main"}).findAll("table")[0].findAll('tbody')[0]
+	content = tbody
 	return content
 
 if __name__ == '__main__':
