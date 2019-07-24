@@ -50,7 +50,7 @@ HELP_MSG = (get_emoji(EMO) + "The following are working commands:" +
 		"\n-matchup > find easy matchups for input champ, " +
 		"\n-partner > find good partner along with input champ, " +
 		"\n-tips > find tips for playing against input champ " + 
-		"\n-tiers > find the god tier champions for (Top, Jg, Mid, Bottom, Sup)" +
+		"\n-tier > find the god tier champions for (Top, Jg, Mid, Bottom, Sup)" +
 		"\n-help for getting help to use this bot... " + 
 		"\n \n Use correct champion name after each command except help!")
 
