@@ -18,6 +18,9 @@ handler = WebhookHandler('88095fca9a435628a8522c92f8d601e9')
 import urllib
 import requests
 import random
+
+from bs4 import BeautifulSoup
+
 #from bs4 import BeautifulSoup
 
 counter_cols = ['Top Counter', 'Second Counter', 'Third Counter', 'Fourth Counter', 'Fifth Counter', 'Sixth Counter']
@@ -37,6 +40,7 @@ THUMB = b"\xF0\x9F\x91\x8D"
 EYE = b"\xF0\x9F\x91\x80"
 HANDS = b"\xF0\x9F\x99\x8C"
 BULB = b"\xF0\x9F\x92\xA1"
+FIRE = b"\xF0\x9F\x94\xA5"
 
 def get_emoji(code):
 	return code.decode('utf-8')
@@ -206,11 +210,12 @@ def get_lane_tier(lane):
 
 def format_tier_msg(pos):
 	champs = get_lane_tier(pos)
+	FIRE_STR = get_emoji(FIRE)
 	if champs == -1:
 		return "Invalid Input"
-	msg = "The God Tier list for {} ...\n".format(pos)
+	msg = "The God Tier list for {} in the current patch...\n".format(pos)
 	for champ in champs:
-		msg += "{}...".format(champ)
+		msg += FIRE_STR + "{}...".format(champ)
 	return msg
 
 

@@ -157,6 +157,20 @@ def get_tier_list_moba():
 		tier[pos[i]] = curr
 	return tier
 
+def get_lane_tier(lane):
+	if lane not in pos:
+		return -1
+	tiers = get_tier_list_moba()
+	return tiers[lane]
+
+def format_tier_msg(pos):
+	champs = get_lane_tier(pos)
+	if champs == -1:
+		return "Invalid Input"
+	msg = "The God Tier list for {} ...\n".format(pos)
+	for champ in champs:
+		msg += "{}...".format(champ)
+	return msg
 
 if __name__ == '__main__':
 	print(get_tier_list_moba())
