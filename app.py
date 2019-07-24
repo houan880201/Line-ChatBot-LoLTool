@@ -268,26 +268,12 @@ def handle_message(event):
 		return 0
 
 	if input_str == 'image':
-		imagemap_message = ImagemapSendMessage(
-            base_url='https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2018-06-26/387839795169_9776bdf0a8510b40c130_512.png',
-            alt_text='this is an imagemap',
-            base_size=BaseSize(height=1040, width=1040),
-            actions=[
-                URIImagemapAction(
-                    link_uri='https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2018-06-26/387839795169_9776bdf0a8510b40c130_512.png',
-                    area=ImagemapArea(
-                        x=0, y=0, width=520, height=1040
-                    )
-                ),
-                MessageImagemapAction(
-                    text='hello',
-                    area=ImagemapArea(
-                        x=520, y=0, width=520, height=1040
-                    )
-                )
-            ]
+		url = "opgg-static.akamaized.net/images/lol/spell/SummonerDot.png?image=w_42&amp;v=15354684000"
+		image_message = ImageSendMessage(
+            original_content_url=url,
+            preview_image_url=url
         )
-		line_bot_api.reply_message(event.reply_token, imagemap_message)
+		line_bot_api.reply_message(event.reply_token, image_message)
 
 	if input_str == "help" or input_str == "Help":
 		reply_message = HELP_MSG
