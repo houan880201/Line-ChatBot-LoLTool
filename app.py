@@ -25,6 +25,7 @@ order_cols = ['First Counter', 'Second Counter', 'Third Counter', 'Fourth Counte
 against_cols = ['First Strong Against', 'Second Strong Against', 'Third Strong Against', 'Fourth Strong Against', 'Fifth Strong Against', 'Sixth Strong Against']
 partner_cols = ['First Good Partner', 'Second Good Partner', 'Third Good Partner', 'Fourth Good Partner', 'Fifth Good Partner', 'Sixth Good Partner']
 tips_cols = ['Counter Tip One','Counter Tip Two','Counter Tip Three','Counter Tip Four']
+pos = ["Top", "JG", "Mid", "Bottom", "Sup"]
 
 response = requests.get("https://api.myjson.com/bins/tkg0v")
 data = response.json()
@@ -181,6 +182,37 @@ def format_tip_msg(name):
 		msg += BULB_STR + "{} \n".format(tips[i])
 	return msg
 
+def get_tier_list_moba():
+	target_url = "https://www.mobachampion.com/tier-list/"
+	headers = {'Accept-Language': 'en-US,en;q=0.8'}
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True, headers=headers)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	champs = soup.findAll("h3", text="God Tier")
+	tier = {}
+	for i in range(len(pos)):
+		curr = []
+		for lane in champs[i].find_next_sibling("div").findAll("div",{"class":"caption"}):
+			curr.append(lane.text)
+		tier[pos[i]] = curr
+	return tier
+
+def get_lane_tier(lane):
+	if lane not in pos:
+		return -1
+	tiers = get_tier_list_moba()
+	return tiers[lane]
+
+def format_tier_msg(pos):
+	champs = get_lane_tier(pos)
+	if champs == -1:
+		return "Invalid Input"
+	msg = "The God Tier list for {} ...\n".format(pos)
+	for champ in champs:
+		msg += "{}...".format(champ)
+	return msg
+
 
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
@@ -208,19 +240,22 @@ def handle_message(event):
 		return 0
 
 	command = splited[0].lower()
-	champ = splited[1].capitalize()
+	obj = splited[1].capitalize()
 
 	if command == "counter":
-		reply_message = format_counter_msg(champ)
+		reply_message = format_counter_msg(obj)
 
 	elif command == "partner":
-		reply_message = format_partner_msg(champ)
+		reply_message = format_partner_msg(obj)
 
 	elif command == "matchup":
-		reply_message = format_against_msg(champ)
+		reply_message = format_against_msg(obj)
 
 	elif command == 'tips':
-		reply_message = format_tip_msg(champ)
+		reply_message = format_tip_msg(obj)
+
+	elif command == 'tier':
+		reply_message = format_tier_msg(obj)
 
 	else:
 		reply_message = "Type a valid command kid..." + ERROR_MSG

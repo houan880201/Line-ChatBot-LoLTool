@@ -119,21 +119,47 @@ def format_tip_msg(name):
 		msg += "{} \n".format(tips[i])
 	return msg
 
-def get_tier_list():
+def get_tier_list_op():
 	headers = {'Accept-Language': 'en-US,en;q=0.8'}
 	target_url = 'https://na.op.gg/champion/statistics'
 	print('Start parsing website...')
 	rs = requests.session()
 	res = rs.get(target_url, verify=True, headers=headers)
 	soup = BeautifulSoup(res.text, 'html.parser')
-	side = soup.select(".l-champion-index-content--side")
-	content = side
-	return content
+	champNames = soup.find("div", {"class": "l-champion-index-content--side"}).findAll("div", {"class":"champion-index-table__name"})
+	#table = side.select(".champion-index-table__name")
+	champTier = soup.find("div", {"class": "l-champion-index-content--side"}).findAll('td', limit=7)
+	content = champTier
+	champs = []
+	for name in champNames:
+		champs.append(name.text)
+	result = []
+	for inside in champTier:
+		result.append(inside.text)
+	lala = soup.find("div", {"class":"l-champion-index-content--side"})
+	return lala
 
+pos = ["Top", "JG", "Mid", "Bottom", "Sup"]
+
+def get_tier_list_moba():
+	target_url = "https://www.mobachampion.com/tier-list/"
+	headers = {'Accept-Language': 'en-US,en;q=0.8'}
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True, headers=headers)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	champs = soup.findAll("h3", text="God Tier")
+	tier = {}
+	for i in range(len(pos)):
+		curr = []
+		for lane in champs[i].find_next_sibling("div").findAll("div",{"class":"caption"}):
+			curr.append(lane.text)
+		tier[pos[i]] = curr
+	return tier
 
 
 if __name__ == '__main__':
-	print(get_tier_list())
+	print(get_tier_list_moba())
 
 
 
