@@ -29,6 +29,7 @@ against_cols = ['First Strong Against', 'Second Strong Against', 'Third Strong A
 partner_cols = ['First Good Partner', 'Second Good Partner', 'Third Good Partner', 'Fourth Good Partner', 'Fifth Good Partner', 'Sixth Good Partner']
 tips_cols = ['Counter Tip One','Counter Tip Two','Counter Tip Three','Counter Tip Four']
 pos = ["Top", "Jg", "Mid", "Bottom", "Sup"]
+roles = ["top", "jungle", "middle", "adc", "support"]
 
 response = requests.get("https://api.myjson.com/bins/tkg0v")
 data = response.json()
@@ -41,6 +42,7 @@ EYE = b"\xF0\x9F\x91\x80"
 HANDS = b"\xF0\x9F\x99\x8C"
 BULB = b"\xF0\x9F\x92\xA1"
 FIRE = b"\xF0\x9F\x94\xA5"
+TROPHY = b"\xF0\x9F\x8F\x86"
 
 def get_emoji(code):
 	return code.decode('utf-8')
@@ -150,31 +152,31 @@ def get_tips(name):
 def format_counter_msg(name):
 	counters, locs = get_counter(name)
 	EYE_STR = get_emoji(EYE)
-	msg = "These champs counter {} ...\n".format(name)
+	msg = "These champs counter {} ...".format(name)
 	if counters == -1 or locs == -1:
 		return "Invalid input"
 	for i in range(len(counters)):
-		msg += EYE_STR+ "... {} at {}. \n".format(counters[i], locs[i])
+		msg += "\n{}... {} at {}.".format(EYE_STR, counters[i], locs[i])
 	return msg
 
 def format_against_msg(name):
 	against, locs = get_strong_against(name)
 	THUMB_STR = get_emoji(THUMB)
-	msg = "{} is strong against... \n".format(name)
+	msg = "{} is strong against... ".format(name)
 	if against == -1 or locs == -1:
 		return "Invalid input"
 	for i in range(len(against)):
-		msg += THUMB_STR + "... {} at {}. \n".format(against[i], locs[i])
+		msg +=  "\n... {} at {}.".format(THUMB_STR, against[i], locs[i])
 	return msg
 
 def format_partner_msg(name):
 	partners = get_partner(name)
 	HANDS_STR = get_emoji(HANDS)
-	msg = "The following champs go well with {} ... \n".format(name)
+	msg = "The following champs go well with {} ... ".format(name)
 	if partners == -1:
 		return "Invalid input"
 	for i in range(len(partners)):
-		msg += HANDS_STR + "... {}. \n".format(partners[i])
+		msg += "\n{}... {}.".format(HANDS_STR, partners[i])
 	return msg
 
 def format_tip_msg(name):
@@ -182,9 +184,9 @@ def format_tip_msg(name):
 	BULB_STR = get_emoji(BULB)
 	if tips == -1:
 		return "Invalid input"
-	msg = "To beat {}... \n".format(name)
+	msg = "To beat {}... ".format(name)
 	for i in range(len(tips)):
-		msg += BULB_STR + "{} \n".format(tips[i])
+		msg +=  "\n{}{} ".format(BULB_STR, tips[i])
 	return msg
 
 def get_tier_list_moba():
@@ -214,9 +216,42 @@ def format_tier_msg(pos):
 	FIRE_STR = get_emoji(FIRE)
 	if champs == -1:
 		return "Invalid Input"
-	msg = "The God Tier list for {} in the current patch...\n".format(pos)
+	msg = "The God Tier list for {} in the current patch...".format(pos)
 	for champ in champs:
-		msg += FIRE_STR + "{}...\n".format(champ)
+		msg += "\n{}{}...".format(FIRE_STR,champ)
+	return msg
+
+def get_champ_win_rates():
+	target_url = "https://www.lolrift.com/statistics"
+	headers = {'Accept-Language': 'en-US,en;q=0.8'}
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True, headers=headers)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	tb = soup.findAll("ul", {"class":"stats_ratesChampList"}, limit=5)
+	all_rates = {}
+	for i in range(len(pos)):
+		lane = tb[i].findAll("li")
+		lane_rates = {}
+		for champ in lane:
+			lane_rates[champ.find("a")['title']] = champ.find("span").text
+		all_rates[pos[i]] = lane_rates
+	return all_rates
+
+def get_lane_rates(lane):
+	if lane not in pos:
+		return -1
+	rates = get_champ_win_rates()
+	return rates[lane]
+
+def format_rates_msg(pos):
+	lane_rates = get_lane_rates(pos)
+	TROPHY_STR = get_emoji(TROPHY)
+	if lane_rates == -1:
+		return "Invalid Input"
+	msg = "The win rates for the champions at {}...".format(pos)
+	for champ in lone_rates:
+		msg += "\n{}{} has a win rate of {}".format(TROPHY_STR, champ, lane_rates[champ])
 	return msg
 
 
@@ -262,6 +297,9 @@ def handle_message(event):
 
 	elif command == 'tier':
 		reply_message = format_tier_msg(obj)
+
+	elif command == 'win':
+		reply_message = format_rates_msg(obj)
 
 	else:
 		reply_message = "Type a valid command kid..." + ERROR_MSG

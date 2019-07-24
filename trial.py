@@ -172,8 +172,42 @@ def format_tier_msg(pos):
 		msg += "{}...".format(champ)
 	return msg
 
+roles = ["top", "jungle", "middle", "adc", "support"]
+
+def get_champ_win_rates():
+	target_url = "https://www.lolrift.com/statistics"
+	headers = {'Accept-Language': 'en-US,en;q=0.8'}
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True, headers=headers)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	tb = soup.findAll("ul", {"class":"stats_ratesChampList"}, limit=5)
+	all_rates = {}
+	for i in range(len(pos)):
+		lane = tb[i].findAll("li")
+		lane_rates = {}
+		for champ in lane:
+			lane_rates[champ.find("a")['title']] = champ.find("span").text
+		all_rates[pos[i]] = lane_rates
+	return all_rates
+
+def get_lane_rates(lane):
+	if lane not in pos:
+		return -1
+	rates = get_champ_win_rates()
+	return rates[lane]
+
+def format_rates_msg(pos):
+	lane_rates = get_lane_rates(pos)
+	if lane_rates = -1:
+		return "Invalid Input"
+	msg = "The win rates for the champions at {}...\n".format(pos)
+	for champ in lone_rates:
+		msg += "{} has a win rate of {}".format(champ, lane_rates[champ])
+	return msg
+
 if __name__ == '__main__':
-	print(get_tier_list_moba())
+	print(get_champ_win_rates())
 
 
 
