@@ -144,32 +144,31 @@ def get_tips(name):
 def format_counter_msg(name):
 	counters, locs = get_counter(name)
 	EYE_STR = get_emoji(EYE)
+	msg = "These champs counter {} ...\n".format(name)
 	if counters == -1 or locs == -1:
 		return "Invalid input"
-	else:
-		msg = ""
-		for i in range(len(counters)):
-			msg += EYE_STR+ "{} counters {} at {}. \n".format(counters[i], name, locs[i])
-		return msg
+	for i in range(len(counters)):
+		msg += EYE_STR+ "... {} at {}. \n".format(counters[i], locs[i])
+	return msg
 
 def format_against_msg(name):
 	against, locs = get_strong_against(name)
 	THUMB_STR = get_emoji(THUMB)
+	msg = "{} is strong against... \n".format(name)
 	if against == -1 or locs == -1:
 		return "Invalid input"
-	msg = ""
 	for i in range(len(against)):
-		msg += THUMB_STR + "{} is strong against {} at {}. \n".format(name, against[i], locs[i])
+		msg += THUMB_STR + "... {} at {}. \n".format(against[i], locs[i])
 	return msg
 
 def format_partner_msg(name):
 	partners = get_partner(name)
 	HANDS_STR = get_emoji(HANDS)
+	msg = "The following champs go well with {} ... \n".format(name)
 	if partners == -1:
 		return "Invalid input"
-	msg = ""
 	for i in range(len(partners)):
-		msg += HANDS_STR + "{} goes well with {}. \n".format(partners[i], name)
+		msg += HANDS_STR + "... {}. \n".format(partners[i])
 	return msg
 
 def format_tip_msg(name):
