@@ -28,7 +28,7 @@ order_cols = ['First Counter', 'Second Counter', 'Third Counter', 'Fourth Counte
 against_cols = ['First Strong Against', 'Second Strong Against', 'Third Strong Against', 'Fourth Strong Against', 'Fifth Strong Against', 'Sixth Strong Against']
 partner_cols = ['First Good Partner', 'Second Good Partner', 'Third Good Partner', 'Fourth Good Partner', 'Fifth Good Partner', 'Sixth Good Partner']
 tips_cols = ['Counter Tip One','Counter Tip Two','Counter Tip Three','Counter Tip Four']
-pos = ["Top", "JG", "Mid", "Bottom", "Sup"]
+pos = ["Top", "Jg", "Mid", "Bottom", "Sup"]
 
 response = requests.get("https://api.myjson.com/bins/tkg0v")
 data = response.json()
@@ -50,7 +50,8 @@ HELP_MSG = (get_emoji(EMO) + "The following are working commands:" +
 		"\n-matchup > find easy matchups for input champ, " +
 		"\n-partner > find good partner along with input champ, " +
 		"\n-tips > find tips for playing against input champ " + 
-		"\n-help for getting help to use this bot... "
+		"\n-tiers > find the god tier champions for (Top, Jg, Mid, Bottom, Sup)" +
+		"\n-help for getting help to use this bot... " + 
 		"\n \n Use correct champion name after each command except help!")
 
 '''
@@ -215,7 +216,7 @@ def format_tier_msg(pos):
 		return "Invalid Input"
 	msg = "The God Tier list for {} in the current patch...\n".format(pos)
 	for champ in champs:
-		msg += FIRE_STR + "{}...".format(champ)
+		msg += FIRE_STR + "{}...\n".format(champ)
 	return msg
 
 
@@ -223,7 +224,7 @@ def format_tier_msg(pos):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
 	input_str = event.message.text
-
+	input_str = input_str.strip()
 	if input_str == "":
 		reply_message = "Type something... \n" + ERROR_MSG
 		message = TextSendMessage(reply_message)
