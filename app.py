@@ -41,11 +41,12 @@ def get_emoji(code):
 	return code.decode('utf-8')
 
 HELP_MSG = (get_emoji(EMO) + "The following are working commands:" +
-		"\n'counter' for finding countering champions against your opponent, "+
-		"\n'matchup' for finding good matchups for your pick, " +
-		"\n'partner' for finding good partner along with your pick, " +
-		"\n'tips' for tips playing against your opponent's pick " + 
-		"\n'help' for getting help to use this bot... ")
+		"\n-counter > find counter champion against input champ, "+
+		"\n-matchup > find easy matchups for input champ, " +
+		"\n-partner > find good partner along with input champ, " +
+		"\n-tips > find tips for playing against input champ " + 
+		"\n-help for getting help to use this bot... "
+		"\n \n Use correct champion name after each command except help!")
 
 '''
 TODO:
