@@ -268,12 +268,13 @@ def handle_message(event):
 		return 0
 
 	if input_str == 'image':
-		url = "opgg-static.akamaized.net/images/lol/spell/SummonerDot.png?image=w_42&amp;v=15354684000"
+		url = "https://scontent.ftpe8-2.fna.fbcdn.net/v/t31.0-8/10928973_1529093804018213_3930372778290831110_o.png?_nc_cat=101&_nc_oc=AQlzdGY_qFaEN84UJnskm_4hKRbpUpYcS4L8I-N4QKRPvKm7l6bydftlQ5Q2E_NHAus&_nc_ht=scontent.ftpe8-2.fna&oh=1b3dfd30b799c696f40c53d5e1fe6b5a&oe=5DA8FBB6"
 		image_message = ImageSendMessage(
             original_content_url=url,
             preview_image_url=url
         )
 		line_bot_api.reply_message(event.reply_token, image_message)
+		return 0
 
 	if input_str == "help" or input_str == "Help":
 		reply_message = HELP_MSG
