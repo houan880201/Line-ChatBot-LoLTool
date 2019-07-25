@@ -271,10 +271,12 @@ def get_champs_list():
 def validate_champ(name):
 	name = name.capitalize()
 	data = get_champs_list()
+	print(type(data))
 	if name in data:
 		return True
 	else:
 		return False
+
 
 if __name__ == '__main__':
 	print(validate_champ("Garen"))

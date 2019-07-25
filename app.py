@@ -265,7 +265,7 @@ def format_all_champs():
 	data = get_champs_list()
 	msg = "Here are the available champs...\n"
 	for champ in data:
-		msg+= " {},"
+		msg+= " {},".format(champ)
 	msg = msg[:-1]
 	return msg
 
