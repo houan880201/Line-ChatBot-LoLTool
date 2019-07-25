@@ -34,6 +34,7 @@ HANDS = b"\xF0\x9F\x99\x8C"
 BULB = b"\xF0\x9F\x92\xA1"
 FIRE = b"\xF0\x9F\x94\xA5"
 TROPHY = b"\xF0\x9F\x8F\x86"
+NUMBER = b'\x23\xE2\x83\xA3'
 
 def get_emoji(code):
 	return code.decode('utf-8')
@@ -309,8 +310,9 @@ def format_leveling_msg(name, pos):
 		msg = "The skills order for {} is...".format(name)
 	else:
 		msg = "The skills order for {} at {} is...".format(name, pos)
-	for i in range(len(order)):
-		msg += "\n{} -- {}".format(i+1, order[i])
+	NUMBER_STR = get_emoji(NUMBER)
+	for i in range(len(order) / 2):
+		msg += "\n{}{} -- {} | {} -- {}".format(NUMBER_STR, i+1, order[i], i+10, order[i+9])
 	return msg
 
 # 處理訊息
@@ -386,7 +388,7 @@ def handle_message(event):
 		elif len(splited) == 3:
 			position = splited[2]
 			reply_message = format_leveling_msg(obj, position)
-			
+
 	else:
 		reply_message = "Type a valid command kid..." + ERROR_MSG
 
