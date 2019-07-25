@@ -216,8 +216,68 @@ def get_counter_tips(champ):
 		content.append(tip.text.rstrip('\n'))
 	return content
 
+def get_counter_champs(champ):
+	target_url = "https://lolcounter.com/champions/{}".format(champ)
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	champs = soup.findAll("div",{"class": "champ-block"},limit=7)[1:]
+	content = []
+	locs = []
+	for counter in champs:
+		content.append(counter.find("div",{"class":"name"}).text.rstrip('\n'))
+		locs.append(counter.find("div",{"class":"lane"}).text)
+	return content, locs
+
+def get_against_champs(champ):
+	target_url = "https://lolcounter.com/champions/{}".format(champ)
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	champs = soup.find("div",{"class": "strong-block"}).findAll("div", {"class":"champ-block"}, limit=6)
+	names = []
+	locs = []
+	for champ in champs:
+		names.append(champ.find("div",{"class":"name"}).text)
+		locs.append(champ.find("div",{"class":"lane"}).text)
+	return names, locs
+
+def get_tgt_champs(champ):
+	target_url = "https://lolcounter.com/champions/{}".format(champ)
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	champs = soup.find("div",{"class": "good-block"}).findAll("div", {"class":"champ-block"}, limit=6)
+	names = []
+	for champ in champs:
+		names.append(champ.find("div",{"class":"name"}).text)
+	return names
+
+def get_champs_list():
+	target_url = "https://leagueoflegends.fandom.com/wiki/List_of_champions"
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	tds = soup.findAll("td", {"style":"text-align:left;"})
+	content = []
+	for td in tds:
+		content.append(td.find("span", {"style":"white-space:normal;"}).find("a")['title'])
+	return content
+
+def validate_champ(name):
+	name = name.capitalize()
+	data = get_champs_list()
+	if name in data:
+		return True
+	else:
+		return False
+
 if __name__ == '__main__':
-	print(get_counter_tips("aatrox"))
+	print(validate_champ("Garen"))
 
 
 

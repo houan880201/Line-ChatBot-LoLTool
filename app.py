@@ -23,16 +23,7 @@ from bs4 import BeautifulSoup
 
 #from bs4 import BeautifulSoup
 
-counter_cols = ['Top Counter', 'Second Counter', 'Third Counter', 'Fourth Counter', 'Fifth Counter', 'Sixth Counter']
-order_cols = ['First Counter', 'Second Counter', 'Third Counter', 'Fourth Counter', 'Fifth Counter', 'Sixth Counter']
-against_cols = ['First Strong Against', 'Second Strong Against', 'Third Strong Against', 'Fourth Strong Against', 'Fifth Strong Against', 'Sixth Strong Against']
-partner_cols = ['First Good Partner', 'Second Good Partner', 'Third Good Partner', 'Fourth Good Partner', 'Fifth Good Partner', 'Sixth Good Partner']
-tips_cols = ['Counter Tip One','Counter Tip Two','Counter Tip Three','Counter Tip Four']
-pos = ["Top", "Jg", "Mid", "Bottom", "Sup"]
-roles = ["top", "jungle", "middle", "adc", "support"]
-
-response = requests.get("https://api.myjson.com/bins/tkg0v")
-data = response.json()
+POS = ["Top", "Jg", "Mid", "Bottom", "Sup"]
 
 ERROR_MSG = "Type 'help' to learn... stupid..."
 
@@ -85,73 +76,44 @@ def callback():
 	return 'OK'
 
 
-def valid_champ(name):
-	champs = get_all_champions()
-	if name in champs or name.capitalize() in champs:
+def get_champs_list():
+	target_url = "https://leagueoflegends.fandom.com/wiki/List_of_champions"
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	tds = soup.findAll("td", {"style":"text-align:left;"})
+	content = []
+	for td in tds:
+		content.append(td.find("span", {"style":"white-space:normal;"}).find("a")['title'])
+	return content
+
+def validate_champ(name):
+	name = name.capitalize()
+	data = get_champs_list()
+	if name in data:
 		return True
 	else:
 		return False
 
-def get_all_champions():
-	# JSON is hosted at myjson.com as well just in case
-	# url = 'https://api.myjson.com/bins/tkg0v'
-	allChampions = []
-	for champ in data:
-		allChampions.append(champ['Champion Names'])
-	return allChampions
-
-def parse_name(url):
-	return url.split('/')[-1]
-
-def get_loc_names(counter_cols):
-	loc_names = []
-	for col in counter_cols:
-		loc_names.append(col + " Location")
-	return loc_names
-
-def get_counter(name):
+def get_counter_champs(champ):
 	if not valid_champ(name):
-		print("input " + name)
 		return -1, -1
-	counters = []
+	target_url = "https://lolcounter.com/champions/{}".format(champ)
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	champs = soup.findAll("div",{"class": "champ-block"},limit=7)[1:]
+	content = []
 	locs = []
-	for champs in data:
-		if champs['Champion Names'] == name:
-			for col in counter_cols:
-				counters.append(parse_name(champs[col]))
-			for col in get_loc_names(order_cols):
-				locs.append(champs[col])
-	return counters, locs
-
-def get_strong_against(name):
-	against = []
-	locs = []
-	for champs in data:
-		if champs['Champion Names'] == name:
-			for col in against_cols:
-				against.append(parse_name(champs[col]))
-			for col in get_loc_names(against_cols):
-				locs.append(champs[col])
-	return against, locs
-
-def get_partner(name):
-	parters = []
-	for champs in data:
-		if champs['Champion Names'] == name:
-			for col in partner_cols:
-				parters.append(parse_name(champs[col]))
-	return parters	
-
-def get_tips(name):
-	tips = []
-	for champs in data:
-		if champs['Champion Names'] == name:
-			for col in tips_cols:
-				tips.append(parse_name(champs[col]))	
-	return tips
+	for counter in champs:
+		content.append(counter.find("div",{"class":"name"}).text.rstrip('\n'))
+		locs.append(counter.find("div",{"class":"lane"}).text)
+	return content, locs
 
 def format_counter_msg(name):
-	counters, locs = get_counter(name)
+	counters, locs = get_counter_champs(name)
 	EYE_STR = get_emoji(EYE)
 	msg = "These champs counter {} ...".format(name)
 	if counters == -1 or locs == -1:
@@ -160,8 +122,24 @@ def format_counter_msg(name):
 		msg += "\n{}{} at {}.".format(EYE_STR, counters[i], locs[i])
 	return msg
 
+def get_against_champs(champ):
+	if not valid_champ(name):
+		return -1, -1
+	target_url = "https://lolcounter.com/champions/{}".format(champ)
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	champs = soup.find("div",{"class": "strong-block"}).findAll("div", {"class":"champ-block"}, limit=6)
+	names = []
+	locs = []
+	for champ in champs:
+		names.append(champ.find("div",{"class":"name"}).text)
+		locs.append(champ.find("div",{"class":"lane"}).text)
+	return names, locs
+
 def format_against_msg(name):
-	against, locs = get_strong_against(name)
+	against, locs = get_against_champs(name)
 	THUMB_STR = get_emoji(THUMB)
 	msg = "{} is strong against... ".format(name)
 	if against == -1 or locs == -1:
@@ -170,8 +148,22 @@ def format_against_msg(name):
 		msg +=  "\n{}{} at {}.".format(THUMB_STR, against[i], locs[i])
 	return msg
 
+def get_tgt_champs(champ):
+	if not valid_champ(name):
+		return -1, -1
+	target_url = "https://lolcounter.com/champions/{}".format(champ)
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	champs = soup.find("div",{"class": "good-block"}).findAll("div", {"class":"champ-block"}, limit=6)
+	names = []
+	for champ in champs:
+		names.append(champ.find("div",{"class":"name"}).text)
+	return names
+
 def format_partner_msg(name):
-	partners = get_partner(name)
+	partners = get_tgt_champs(name)
 	HANDS_STR = get_emoji(HANDS)
 	msg = "The following champs go well with {} ... ".format(name)
 	if partners == -1:
@@ -181,6 +173,8 @@ def format_partner_msg(name):
 	return msg
 
 def get_counter_tips(champ):
+	if not valid_champ(name):
+		return -1, -1
 	target_url = "https://lolcounter.com/champions/{}".format(champ)
 	print('Start parsing website...')
 	rs = requests.session()
@@ -211,7 +205,7 @@ def get_tier_list_moba():
 	soup = BeautifulSoup(res.text, 'html.parser')
 	champs = soup.findAll("h3", text="God Tier")
 	tier = {}
-	for i in range(len(pos)):
+	for i in range(len(POS)):
 		curr = []
 		for lane in champs[i].find_next_sibling("div").findAll("div",{"class":"caption"}):
 			curr.append(lane.text)
@@ -219,7 +213,7 @@ def get_tier_list_moba():
 	return tier
 
 def get_lane_tier(lane):
-	if lane not in pos:
+	if lane not in POS:
 		return -1
 	tiers = get_tier_list_moba()
 	return tiers[lane]
@@ -243,16 +237,16 @@ def get_champ_win_rates():
 	soup = BeautifulSoup(res.text, 'html.parser')
 	tb = soup.findAll("ul", {"class":"stats_ratesChampList"}, limit=5)
 	all_rates = {}
-	for i in range(len(pos)):
+	for i in range(len(POS)):
 		lane = tb[i].findAll("li")
 		lane_rates = {}
 		for champ in lane:
 			lane_rates[champ.find("a")['title']] = champ.find("span").text
-		all_rates[pos[i]] = lane_rates
+		all_rates[POS[i]] = lane_rates
 	return all_rates
 
 def get_lane_rates(lane):
-	if lane not in pos:
+	if lane not in POS:
 		return -1
 	rates = get_champ_win_rates()
 	return rates[lane]
@@ -267,6 +261,13 @@ def format_rates_msg(pos):
 		msg += "\n{}{} -win rate- {}".format(TROPHY_STR, champ, lane_rates[champ])
 	return msg
 
+def format_all_champs():
+	data = get_champs_list()
+	msg = "Here are the available champs...\n"
+	for champ in data:
+		msg+= " {},"
+	msg = msg[:-1]
+	return msg
 
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
@@ -286,6 +287,12 @@ def handle_message(event):
             preview_image_url=url
         )
 		line_bot_api.reply_message(event.reply_token, image_message)
+		return 0
+
+	if input_str == 'names' or input_str == "Names":
+		reply_message = format_all_champs()
+		message = TextSendMessage(reply_message)
+		line_bot_api.reply_message(event.reply_token, message)
 		return 0
 
 	if input_str == "help" or input_str == "Help":
