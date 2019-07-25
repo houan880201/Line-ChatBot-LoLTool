@@ -24,7 +24,8 @@ from bs4 import BeautifulSoup
 #from bs4 import BeautifulSoup
 
 POS = ["Top", "Jg", "Mid", "Bottom", "Sup"]
-
+ROLE = ["Top", "Jungle", "Middle", "ADC", "Support"]
+POS_MAP = dict(zip(POS, ROLE))
 ERROR_MSG = "Type 'help' to learn... stupid..."
 
 EMO = b"\xF0\x9F\x98\x81"
@@ -97,6 +98,13 @@ def validate_champ(name):
 	name = name.capitalize()
 	data = get_champs_list()
 	if name in data:
+		return True
+	else:
+		return False
+
+def validate_pos(input):
+	input = input.capitalize()
+	if input in POS:
 		return True
 	else:
 		return False
@@ -288,7 +296,10 @@ def get_level_order(name, pos):
 	if pos == -1:
 		target_url = "https://champion.gg/champion/{}".format(name)
 	else:
-		target_url = "https://champion.gg/champion/{}/{}".format(name, pos)
+		if not validate_pos(pos):
+			return -1
+		else:
+			target_url = "https://champion.gg/champion/{}/{}".format(name, pos)
 	print('Start parsing website...')
 	rs = requests.session()
 	res = rs.get(target_url, verify=True)
@@ -312,7 +323,7 @@ def format_leveling_msg(name, pos):
 		msg = "The skills order for {} at {} is...".format(name, pos)
 	NUMBER_STR = get_emoji(NUMBER)
 	for i in range(int(len(order)/2)):
-		msg += "\n{}{} -- {} | {} -- {}".format(NUMBER_STR, i+1, order[i], i+10, order[i+9])
+		msg += "\n{}{} -- {} |{}{} -- {}".format(NUMBER_STR, i+1, order[i], NUMBER_STR, i+10, order[i+9])
 	return msg
 
 # 處理訊息
@@ -387,7 +398,7 @@ def handle_message(event):
 			reply_message = format_leveling_msg(obj, -1)
 		elif len(splited) == 3:
 			position = splited[2]
-			reply_message = format_leveling_msg(obj, position)
+			reply_message = format_leveling_msg(obj.capitalize(), position.capitalize())
 
 	else:
 		reply_message = "Type a valid command kid..." + ERROR_MSG
