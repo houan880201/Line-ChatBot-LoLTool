@@ -39,13 +39,17 @@ def get_emoji(code):
 	return code.decode('utf-8')
 
 HELP_MSG = (get_emoji(EMO) + "The following are working commands:" +
+		"\n ---Commands that follow objects---" +
 		"\n-counter > find counter champion against input champ, "+
 		"\n-matchup > find easy matchups for input champ, " +
 		"\n-partner > find good partner along with input champ, " +
 		"\n-tips > find tips for playing against input champ " + 
 		"\n-tier > find the god tier champions for (Top, Jg, Mid, Bottom, Sup)" +
 		"\n-win > find the few highest win rates for (Top, Jg, Mid, Bottom, Sup)" +
+		"\n --- Single word Commands---" +
 		"\n-help for getting help to use this bot... " + 
+		"\n-champs for available champions..." +
+		"\n-pos for available positions..." +
 		"\n \n Use correct champion name after each command except help!")
 
 '''
@@ -269,6 +273,46 @@ def format_all_champs():
 	msg = msg[:-1]
 	return msg
 
+def format_all_pos():
+	msg = "Here are the available positions...\n"
+	for pos in POS:
+		msg+= " {},".format(pos)
+	msg = msg[:-1]
+	return msg
+
+def get_level_order(name, pos):
+	if not validate_champ(name):
+		return -1
+	target_url = ""
+	if pos == -1:
+		target_url = "https://champion.gg/champion/{}".format(name)
+	else:
+		target_url = "https://champion.gg/champion/{}/{}".format(name, pos)
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	content = soup.find("div",{"class":"skill-order"}).findAll("div",{"class":"skill-selections"})[1:]
+	skill = ["" for x in range(18)]
+	for row in content:
+		spans = [words.text for words in row.findAll("span")]
+		for i in range(len(spans)):
+			if spans[i]:
+				skill[i] = spans[i]
+	return skill
+
+def format_leveling_msg(name, pos):
+	order = get_level_order(name, pos)
+	if order == -1:
+		return "Invalid Input"
+	if pos == -1:
+		msg = "The skills order for {} is...".format(name)
+	else:
+		msg = "The skills order for {} at {} is...".format(name, pos)
+	for i in range(len(order)):
+		msg += "\n{} -- {}".format(i+1, order[i])
+	return msg
+
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -289,8 +333,14 @@ def handle_message(event):
 		line_bot_api.reply_message(event.reply_token, image_message)
 		return 0
 
-	if input_str == 'names' or input_str == "Names":
+	if input_str == 'champs' or input_str == "Champs":
 		reply_message = format_all_champs()
+		message = TextSendMessage(reply_message)
+		line_bot_api.reply_message(event.reply_token, message)
+		return 0
+
+	if input_str == 'pos' or input_str == 'Pos':
+		reply_message = format_all_pos()
 		message = TextSendMessage(reply_message)
 		line_bot_api.reply_message(event.reply_token, message)
 		return 0
@@ -330,6 +380,13 @@ def handle_message(event):
 	elif command == 'win':
 		reply_message = format_rates_msg(obj)
 
+	elif command == 'level':
+		if len(splited) == 2:
+			reply_message = format_leveling_msg(obj, -1)
+		elif len(splited) == 3:
+			position = splited[2]
+			reply_message = format_leveling_msg(obj, position)
+			
 	else:
 		reply_message = "Type a valid command kid..." + ERROR_MSG
 

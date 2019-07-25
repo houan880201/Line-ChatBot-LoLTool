@@ -5,6 +5,7 @@ import time
 import unidecode
 import urllib.request
 import requests
+import numpy as np
 
 counter_cols = ['Top Counter', 'Second Counter', 'Third Counter', 'Fourth Counter', 'Fifth Counter', 'Sixth Counter']
 order_cols = ['First Counter', 'Second Counter', 'Third Counter', 'Fourth Counter', 'Fifth Counter', 'Sixth Counter']
@@ -277,9 +278,42 @@ def validate_champ(name):
 	else:
 		return False
 
+def get_level_order(name, pos):
+	if not validate_champ(name):
+		return -1
+	target_url = ""
+	if pos == -1:
+		target_url = "https://champion.gg/champion/{}".format(name)
+	else:
+		target_url = "https://champion.gg/champion/{}/{}".format(name, pos)
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	content = soup.find("div",{"class":"skill-order"}).findAll("div",{"class":"skill-selections"})[1:]
+	skill = ["" for x in range(18)]
+	for row in content:
+		spans = [words.text for words in row.findAll("span")]
+		for i in range(len(spans)):
+			if spans[i]:
+				skill[i] = spans[i]
+	return skill
+
+def format_leveling_msg(name, pos):
+	order = get_level_order(name, pos)
+	if order == -1:
+		return "Invalid Input"
+	if pos == -1:
+		msg = "The skills order for {} is...".format(name)
+	else:
+		msg = "The skills order for {} at {} is...".format(name, pos)
+	for i in range(len(order)):
+		msg += "\n{} -- {}".format(i+1, order[i])
+	return msg
+
 
 if __name__ == '__main__':
-	print(validate_champ("Garen"))
+	print(format_leveling_msg("Aatrox","Top"))
 
 
 
