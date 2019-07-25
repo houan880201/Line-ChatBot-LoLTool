@@ -97,7 +97,7 @@ def validate_champ(name):
 		return False
 
 def get_counter_champs(champ):
-	if not validate_champ(name):
+	if not validate_champ(champ):
 		return -1, -1
 	target_url = "https://lolcounter.com/champions/{}".format(champ)
 	print('Start parsing website...')
@@ -123,7 +123,7 @@ def format_counter_msg(name):
 	return msg
 
 def get_against_champs(champ):
-	if not validate_champ(name):
+	if not validate_champ(champ):
 		return -1, -1
 	target_url = "https://lolcounter.com/champions/{}".format(champ)
 	print('Start parsing website...')
@@ -149,7 +149,7 @@ def format_against_msg(name):
 	return msg
 
 def get_tgt_champs(champ):
-	if not validate_champ(name):
+	if not validate_champ(champ):
 		return -1, -1
 	target_url = "https://lolcounter.com/champions/{}".format(champ)
 	print('Start parsing website...')
@@ -173,7 +173,7 @@ def format_partner_msg(name):
 	return msg
 
 def get_counter_tips(champ):
-	if not validate_champ(name):
+	if not validate_champ(champ):
 		return -1, -1
 	target_url = "https://lolcounter.com/champions/{}".format(champ)
 	print('Start parsing website...')
