@@ -42,6 +42,7 @@ def get_emoji(code):
 
 HELP_MSG = (get_emoji(EMO) + "The following are working commands:" +
 		"\n ---Commands that follow objects---" +
+		"\n-level> either follow by just champ's name or plus the position" +
 		"\n-counter > find counter champion against input champ, "+
 		"\n-matchup > find easy matchups for input champ, " +
 		"\n-partner > find good partner along with input champ, " +
