@@ -177,11 +177,23 @@ def format_partner_msg(name):
 	if partners == -1:
 		return "Invalid input"
 	for i in range(len(partners)):
-		msg += "\n{}... {}.".format(HANDS_STR, partners[i])
+		msg += "\n{}{}.".format(HANDS_STR, partners[i])
 	return msg
 
+def get_counter_tips(champ):
+	target_url = "https://lolcounter.com/champions/{}".format(champ)
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	tips = soup.findAll("span",{"class": "_tip"})
+	content = []
+	for tip in tips:
+		content.append(tip.text.rstrip('\n'))
+	return content
+
 def format_tip_msg(name):
-	tips = get_tips(name)
+	tips = get_counter_tips(name)
 	BULB_STR = get_emoji(BULB)
 	if tips == -1:
 		return "Invalid input"

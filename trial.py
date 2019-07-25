@@ -191,39 +191,6 @@ def get_champ_win_rates():
 		all_rates[pos[i]] = lane_rates
 	return all_rates
 
-message = {
-  "type": "imagemap",
-  "baseUrl": "圖片網址的一部分",
-  "altText": "在不支援顯示影像地圖的地方顯示的文字",
-  "baseSize": {
-    "height": 1040,
-    "width": 1040
-  },
-  "actions": [
-    {
-      "type": "uri",
-      "linkUri": "https://www.kamigo.tw/",
-      "label": "https://www.kamigo.tw/",
-      "area": {
-        "x": 0,
-        "y": 0,
-        "width": 520,
-        "height": 1040
-      }
-    },
-    {
-      "type": "message",
-      "text": "傳送文字",
-      "area": {
-        "x": 520,
-        "y": 0,
-        "width": 520,
-        "height": 1040
-      }
-    }
-  ]
-}
-
 def get_op_build(champion, lane):
 	target_url = "https://tw.op.gg/champion/{}/statistics/{}".format(champion.lower(), lane.lower())
 	headers = {'Accept-Language': 'en-US'}
@@ -237,8 +204,20 @@ def get_op_build(champion, lane):
 	content = tbody
 	return content
 
+def get_counter_tips(champ):
+	target_url = "https://lolcounter.com/champions/{}".format(champ)
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	tips = soup.findAll("span",{"class": "_tip"})
+	content = []
+	for tip in tips:
+		content.append(tip.text.rstrip('\n'))
+	return content
+
 if __name__ == '__main__':
-	print(get_op_build("aatrox", "top"))
+	print(get_counter_tips("aatrox"))
 
 
 
