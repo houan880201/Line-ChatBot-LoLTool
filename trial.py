@@ -313,7 +313,9 @@ def format_leveling_msg(name, pos):
 
 
 if __name__ == '__main__':
-	print(format_leveling_msg("Aatrox","Top"))
+	a = 18 / 2
+	print(type(int(a)))
+
 
 
 

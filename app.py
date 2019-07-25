@@ -311,7 +311,7 @@ def format_leveling_msg(name, pos):
 	else:
 		msg = "The skills order for {} at {} is...".format(name, pos)
 	NUMBER_STR = get_emoji(NUMBER)
-	for i in range(len(order) / 2):
+	for i in range(int(len(order)/2)):
 		msg += "\n{}{} -- {} | {} -- {}".format(NUMBER_STR, i+1, order[i], i+10, order[i+9])
 	return msg
 
