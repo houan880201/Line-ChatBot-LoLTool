@@ -442,7 +442,7 @@ def handle_message(event):
 			reply_message = format_runes_msg(obj, -1)
 		elif len(splited) == 3:
 			position = splited[2]
-			reply_message = format_runes_msg(obj.capitalize(), position.capitalize())
+			reply_message = format_runes_msg(obj.capitalize(), position)
 
 	elif command == 'level':
 		if len(splited) == 2:
