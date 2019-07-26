@@ -36,6 +36,7 @@ BULB = b"\xF0\x9F\x92\xA1"
 FIRE = b"\xF0\x9F\x94\xA5"
 TROPHY = b"\xF0\x9F\x8F\x86"
 NUMBER = b'\x23\xE2\x83\xA3'
+NOTE = b"\xF0\x9F\x93\x94"
 
 def get_emoji(code):
 	return code.decode('utf-8')
@@ -327,6 +328,48 @@ def format_leveling_msg(name, pos):
 		msg += "\n{}{} -- {} |{}{} -- {}".format(NUMBER_STR, i+1, order[i], NUMBER_STR, i+10, order[i+9])
 	return msg
 
+def get_runes_info(champ, pos):
+	if not validate_champ(champ):
+		return -1
+	target_url = ""
+	if pos == -1:
+			target_url = "https://u.gg/lol/champions/{}/build".format(champ)
+	else:
+		target_url = "https://u.gg/lol/champions/{}/build?role={}".format(champ,pos)
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	content = soup.findAll("div",{"class":["perk-active","shard-active"]})
+	runes = [process_url_name(row.find('img')['src']) for row in content]
+	title_htmls= soup.findAll("div", {"class": "perk-style-title"})
+	title = [t.findChildren("div")[0].text for t in title_htmls]
+	rune_build = {}
+	rune_build[title[0]] = runes[0:4]
+	rune_build[title[1]] = runes[4:6]
+	rune_build['Shards'] = runes[6:-1]
+	return rune_build
+
+def process_url_name(url):
+	end = url.split('/')[-1]
+	return end.split('.')[0]
+
+def format_runes_msg(champ, pos):
+	rune_dict = get_runes_info(champ, pos)
+	if rune_dict == -1:
+		return "Invalid Input"
+	if pos == -1:
+		msg = "This is the most common build for {}.".format(champ)
+	else:
+		msg = "This is the most common build for {} at {}.".format(champ, pos)
+	NOTE_STR = get_emoji(NOTE)
+	for item in rune_dict:
+		builds = rune_dict[item]
+		msg += "\n{}{}...".format(NOTE_STR,item)
+		for build in builds:
+			msg += "\n ... {}".format(build)
+	return msg
+
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -393,6 +436,13 @@ def handle_message(event):
 
 	elif command == 'win':
 		reply_message = format_rates_msg(obj)
+
+	elif command == 'runes':
+		if len(splited) == 2:
+			reply_message = format_runes_msg(obj, -1)
+		elif len(splited) == 3:
+			position = splited[2]
+			reply_message = format_runes_msg(obj.capitalize(), position.capitalize())
 
 	elif command == 'level':
 		if len(splited) == 2:

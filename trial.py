@@ -311,10 +311,50 @@ def format_leveling_msg(name, pos):
 		msg += "\n{} -- {}".format(i+1, order[i])
 	return msg
 
+def get_runes_info(champ, pos):
+	if not validate_champ(champ):
+		return -
+	target_url = ""
+	if pos = -1:
+			target_url = "https://u.gg/lol/champions/{}/build".format(champ)
+	else:
+		target_url = "https://u.gg/lol/champions/{}/build?role={}".format(champ,pos)
+	print('Start parsing website...')
+	rs = requests.session()
+	res = rs.get(target_url, verify=True)
+	soup = BeautifulSoup(res.text, 'html.parser')
+	content = soup.findAll("div",{"class":["perk-active","shard-active"]})
+	runes = [process_url_name(row.find('img')['src']) for row in content]
+	title_htmls= soup.findAll("div", {"class": "perk-style-title"})
+	title = [t.findChildren("div")[0].text for t in title_htmls]
+	rune_build = {}
+	rune_build[title[0]] = runes[0:4]
+	rune_build[title[1]] = runes[4:6]
+	rune_build['Shards'] = runes[6:-1]
+	return rune_build
+
+def process_url_name(url):
+	end = url.split('/')[-1]
+	return end.split('.')[0]
+
+def format_runes_msg(champ, pos):
+	rune_dict = get_runes_info(champ, pos)
+	if rune_dict == -1:
+		return "Invalid Input"
+	if pos == -1:
+		msg = "This is the most common build for {}.".format(champ)
+	else:
+		msg = "This is the most common build for {} at {}.".format(champ, pos)
+	NOTE_STR = get_emoji(NOTE)
+	for item in rune_dict:
+		builds = rune_dict[item]
+		msg += "\n{}{}...".format(NOTE_STR,item)
+		for build in builds:
+			msg += "\n ... {}".format(build)
+	return msg
 
 if __name__ == '__main__':
-	a = 18 / 2
-	print(type(int(a)))
+	print(format_runes_msg('aatrox','top'))
 
 
 
